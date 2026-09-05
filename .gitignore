@@ -1,0 +1,16 @@
+/target/
+.env
+.env.*
+!.env.example
+/public/admin/
+/uploads/
+*.log
+*.pid
+frontend/node_modules/
+frontend/dist/
+frontend/.env.local
+!frontend/.env.development
+!frontend/.env.production
+/dist/
+core
+core.*

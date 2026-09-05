@@ -1,0 +1,1414 @@
+{
+  "sys_dept": {
+    "columns": [
+      {
+        "name": "dept_id",
+        "type": "BIGINT",
+        "size": 19,
+        "nullable": false,
+        "auto": true,
+        "default": null
+      },
+      {
+        "name": "parent_id",
+        "type": "BIGINT",
+        "size": 19,
+        "nullable": false,
+        "auto": false,
+        "default": "0"
+      },
+      {
+        "name": "ancestors",
+        "type": "VARCHAR",
+        "size": 50,
+        "nullable": false,
+        "auto": false,
+        "default": ""
+      },
+      {
+        "name": "dept_name",
+        "type": "VARCHAR",
+        "size": 30,
+        "nullable": false,
+        "auto": false,
+        "default": ""
+      },
+      {
+        "name": "order_num",
+        "type": "INT",
+        "size": 10,
+        "nullable": false,
+        "auto": false,
+        "default": "0"
+      },
+      {
+        "name": "leader",
+        "type": "VARCHAR",
+        "size": 20,
+        "nullable": true,
+        "auto": false,
+        "default": null
+      },
+      {
+        "name": "phone",
+        "type": "VARCHAR",
+        "size": 11,
+        "nullable": true,
+        "auto": false,
+        "default": null
+      },
+      {
+        "name": "email",
+        "type": "VARCHAR",
+        "size": 50,
+        "nullable": true,
+        "auto": false,
+        "default": null
+      },
+      {
+        "name": "status",
+        "type": "CHAR",
+        "size": 1,
+        "nullable": false,
+        "auto": false,
+        "default": "0"
+      },
+      {
+        "name": "create_by",
+        "type": "VARCHAR",
+        "size": 64,
+        "nullable": false,
+        "auto": false,
+        "default": ""
+      },
+      {
+        "name": "create_time",
+        "type": "DATETIME",
+        "size": 0,
+        "nullable": false,
+        "auto": false,
+        "default": null
+      },
+      {
+        "name": "update_by",
+        "type": "VARCHAR",
+        "size": 64,
+        "nullable": false,
+        "auto": false,
+        "default": ""
+      },
+      {
+        "name": "update_time",
+        "type": "DATETIME",
+        "size": 0,
+        "nullable": true,
+        "auto": false,
+        "default": null
+      },
+      {
+        "name": "delete_time",
+        "type": "DATETIME",
+        "size": 0,
+        "nullable": true,
+        "auto": false,
+        "default": null
+      }
+    ],
+    "primary": [
+      "dept_id"
+    ]
+  },
+  "sys_user": {
+    "columns": [
+      {
+        "name": "user_id",
+        "type": "BIGINT",
+        "size": 19,
+        "nullable": false,
+        "auto": true,
+        "default": null
+      },
+      {
+        "name": "dept_id",
+        "type": "BIGINT",
+        "size": 19,
+        "nullable": false,
+        "auto": false,
+        "default": "0"
+      },
+      {
+        "name": "user_name",
+        "type": "VARCHAR",
+        "size": 30,
+        "nullable": false,
+        "auto": false,
+        "default": null
+      },
+      {
+        "name": "nick_name",
+        "type": "VARCHAR",
+        "size": 30,
+        "nullable": false,
+        "auto": false,
+        "default": null
+      },
+      {
+        "name": "user_type",
+        "type": "VARCHAR",
+        "size": 2,
+        "nullable": false,
+        "auto": false,
+        "default": "00"
+      },
+      {
+        "name": "email",
+        "type": "VARCHAR",
+        "size": 50,
+        "nullable": false,
+        "auto": false,
+        "default": ""
+      },
+      {
+        "name": "phonenumber",
+        "type": "VARCHAR",
+        "size": 11,
+        "nullable": false,
+        "auto": false,
+        "default": ""
+      },
+      {
+        "name": "sex",
+        "type": "CHAR",
+        "size": 1,
+        "nullable": false,
+        "auto": false,
+        "default": "0"
+      },
+      {
+        "name": "avatar",
+        "type": "VARCHAR",
+        "size": 100,
+        "nullable": false,
+        "auto": false,
+        "default": ""
+      },
+      {
+        "name": "password",
+        "type": "VARCHAR",
+        "size": 100,
+        "nullable": false,
+        "auto": false,
+        "default": ""
+      },
+      {
+        "name": "login_ip",
+        "type": "VARCHAR",
+        "size": 128,
+        "nullable": false,
+        "auto": false,
+        "default": ""
+      },
+      {
+        "name": "login_date",
+        "type": "DATETIME",
+        "size": 0,
+        "nullable": true,
+        "auto": false,
+        "default": null
+      },
+      {
+        "name": "status",
+        "type": "CHAR",
+        "size": 1,
+        "nullable": false,
+        "auto": false,
+        "default": "0"
+      },
+      {
+        "name": "create_by",
+        "type": "VARCHAR",
+        "size": 64,
+        "nullable": false,
+        "auto": false,
+        "default": ""
+      },
+      {
+        "name": "create_time",
+        "type": "DATETIME",
+        "size": 0,
+        "nullable": false,
+        "auto": false,
+        "default": null
+      },
+      {
+        "name": "update_by",
+        "type": "VARCHAR",
+        "size": 64,
+        "nullable": false,
+        "auto": false,
+        "default": ""
+      },
+      {
+        "name": "update_time",
+        "type": "DATETIME",
+        "size": 0,
+        "nullable": true,
+        "auto": false,
+        "default": null
+      },
+      {
+        "name": "delete_time",
+        "type": "DATETIME",
+        "size": 0,
+        "nullable": true,
+        "auto": false,
+        "default": null
+      },
+      {
+        "name": "remark",
+        "type": "VARCHAR",
+        "size": 500,
+        "nullable": true,
+        "auto": false,
+        "default": null
+      }
+    ],
+    "primary": [
+      "user_id"
+    ]
+  },
+  "sys_post": {
+    "columns": [
+      {
+        "name": "post_id",
+        "type": "BIGINT",
+        "size": 19,
+        "nullable": false,
+        "auto": true,
+        "default": null
+      },
+      {
+        "name": "post_code",
+        "type": "VARCHAR",
+        "size": 64,
+        "nullable": false,
+        "auto": false,
+        "default": null
+      },
+      {
+        "name": "post_name",
+        "type": "VARCHAR",
+        "size": 50,
+        "nullable": false,
+        "auto": false,
+        "default": null
+      },
+      {
+        "name": "post_sort",
+        "type": "INT",
+        "size": 10,
+        "nullable": false,
+        "auto": false,
+        "default": "0"
+      },
+      {
+        "name": "status",
+        "type": "CHAR",
+        "size": 1,
+        "nullable": false,
+        "auto": false,
+        "default": "0"
+      },
+      {
+        "name": "create_by",
+        "type": "VARCHAR",
+        "size": 64,
+        "nullable": false,
+        "auto": false,
+        "default": ""
+      },
+      {
+        "name": "create_time",
+        "type": "DATETIME",
+        "size": 0,
+        "nullable": false,
+        "auto": false,
+        "default": null
+      },
+      {
+        "name": "update_by",
+        "type": "VARCHAR",
+        "size": 64,
+        "nullable": false,
+        "auto": false,
+        "default": ""
+      },
+      {
+        "name": "update_time",
+        "type": "DATETIME",
+        "size": 0,
+        "nullable": true,
+        "auto": false,
+        "default": null
+      },
+      {
+        "name": "delete_time",
+        "type": "DATETIME",
+        "size": 0,
+        "nullable": true,
+        "auto": false,
+        "default": null
+      },
+      {
+        "name": "remark",
+        "type": "VARCHAR",
+        "size": 500,
+        "nullable": true,
+        "auto": false,
+        "default": null
+      }
+    ],
+    "primary": [
+      "post_id"
+    ]
+  },
+  "sys_role": {
+    "columns": [
+      {
+        "name": "role_id",
+        "type": "BIGINT",
+        "size": 19,
+        "nullable": false,
+        "auto": true,
+        "default": null
+      },
+      {
+        "name": "role_name",
+        "type": "VARCHAR",
+        "size": 30,
+        "nullable": false,
+        "auto": false,
+        "default": null
+      },
+      {
+        "name": "role_key",
+        "type": "VARCHAR",
+        "size": 100,
+        "nullable": false,
+        "auto": false,
+        "default": null
+      },
+      {
+        "name": "role_sort",
+        "type": "INT",
+        "size": 10,
+        "nullable": false,
+        "auto": false,
+        "default": null
+      },
+      {
+        "name": "data_scope",
+        "type": "CHAR",
+        "size": 1,
+        "nullable": false,
+        "auto": false,
+        "default": "1"
+      },
+      {
+        "name": "menu_check_strictly",
+        "type": "TINYINT",
+        "size": 1,
+        "nullable": false,
+        "auto": false,
+        "default": "1"
+      },
+      {
+        "name": "dept_check_strictly",
+        "type": "TINYINT",
+        "size": 1,
+        "nullable": false,
+        "auto": false,
+        "default": "1"
+      },
+      {
+        "name": "status",
+        "type": "CHAR",
+        "size": 1,
+        "nullable": false,
+        "auto": false,
+        "default": "0"
+      },
+      {
+        "name": "create_by",
+        "type": "VARCHAR",
+        "size": 64,
+        "nullable": false,
+        "auto": false,
+        "default": ""
+      },
+      {
+        "name": "create_time",
+        "type": "DATETIME",
+        "size": 0,
+        "nullable": false,
+        "auto": false,
+        "default": null
+      },
+      {
+        "name": "update_by",
+        "type": "VARCHAR",
+        "size": 64,
+        "nullable": false,
+        "auto": false,
+        "default": ""
+      },
+      {
+        "name": "update_time",
+        "type": "DATETIME",
+        "size": 0,
+        "nullable": true,
+        "auto": false,
+        "default": null
+      },
+      {
+        "name": "delete_time",
+        "type": "DATETIME",
+        "size": 0,
+        "nullable": true,
+        "auto": false,
+        "default": null
+      },
+      {
+        "name": "remark",
+        "type": "VARCHAR",
+        "size": 500,
+        "nullable": true,
+        "auto": false,
+        "default": null
+      }
+    ],
+    "primary": [
+      "role_id"
+    ]
+  },
+  "sys_menu": {
+    "columns": [
+      {
+        "name": "menu_id",
+        "type": "BIGINT",
+        "size": 19,
+        "nullable": false,
+        "auto": true,
+        "default": null
+      },
+      {
+        "name": "menu_name",
+        "type": "VARCHAR",
+        "size": 50,
+        "nullable": false,
+        "auto": false,
+        "default": null
+      },
+      {
+        "name": "parent_id",
+        "type": "BIGINT",
+        "size": 19,
+        "nullable": false,
+        "auto": false,
+        "default": "0"
+      },
+      {
+        "name": "order_num",
+        "type": "INT",
+        "size": 10,
+        "nullable": false,
+        "auto": false,
+        "default": "0"
+      },
+      {
+        "name": "path",
+        "type": "VARCHAR",
+        "size": 200,
+        "nullable": false,
+        "auto": false,
+        "default": ""
+      },
+      {
+        "name": "component",
+        "type": "VARCHAR",
+        "size": 255,
+        "nullable": true,
+        "auto": false,
+        "default": null
+      },
+      {
+        "name": "query",
+        "type": "VARCHAR",
+        "size": 255,
+        "nullable": true,
+        "auto": false,
+        "default": null
+      },
+      {
+        "name": "route_name",
+        "type": "VARCHAR",
+        "size": 50,
+        "nullable": false,
+        "auto": false,
+        "default": ""
+      },
+      {
+        "name": "is_frame",
+        "type": "TINYINT",
+        "size": 1,
+        "nullable": false,
+        "auto": false,
+        "default": "1"
+      },
+      {
+        "name": "is_cache",
+        "type": "TINYINT",
+        "size": 1,
+        "nullable": false,
+        "auto": false,
+        "default": "0"
+      },
+      {
+        "name": "menu_type",
+        "type": "CHAR",
+        "size": 1,
+        "nullable": false,
+        "auto": false,
+        "default": ""
+      },
+      {
+        "name": "visible",
+        "type": "CHAR",
+        "size": 1,
+        "nullable": false,
+        "auto": false,
+        "default": "0"
+      },
+      {
+        "name": "perms",
+        "type": "VARCHAR",
+        "size": 100,
+        "nullable": true,
+        "auto": false,
+        "default": null
+      },
+      {
+        "name": "icon",
+        "type": "VARCHAR",
+        "size": 100,
+        "nullable": false,
+        "auto": false,
+        "default": "#"
+      },
+      {
+        "name": "status",
+        "type": "CHAR",
+        "size": 1,
+        "nullable": false,
+        "auto": false,
+        "default": "0"
+      },
+      {
+        "name": "create_by",
+        "type": "VARCHAR",
+        "size": 64,
+        "nullable": false,
+        "auto": false,
+        "default": ""
+      },
+      {
+        "name": "create_time",
+        "type": "DATETIME",
+        "size": 0,
+        "nullable": false,
+        "auto": false,
+        "default": null
+      },
+      {
+        "name": "update_by",
+        "type": "VARCHAR",
+        "size": 64,
+        "nullable": false,
+        "auto": false,
+        "default": ""
+      },
+      {
+        "name": "update_time",
+        "type": "DATETIME",
+        "size": 0,
+        "nullable": true,
+        "auto": false,
+        "default": null
+      },
+      {
+        "name": "delete_time",
+        "type": "DATETIME",
+        "size": 0,
+        "nullable": true,
+        "auto": false,
+        "default": null
+      },
+      {
+        "name": "remark",
+        "type": "VARCHAR",
+        "size": 500,
+        "nullable": true,
+        "auto": false,
+        "default": null
+      }
+    ],
+    "primary": [
+      "menu_id"
+    ]
+  },
+  "sys_user_role": {
+    "columns": [
+      {
+        "name": "user_id",
+        "type": "BIGINT",
+        "size": 19,
+        "nullable": false,
+        "auto": false,
+        "default": null
+      },
+      {
+        "name": "role_id",
+        "type": "BIGINT",
+        "size": 19,
+        "nullable": false,
+        "auto": false,
+        "default": null
+      }
+    ],
+    "primary": [
+      "user_id",
+      "role_id"
+    ]
+  },
+  "sys_role_menu": {
+    "columns": [
+      {
+        "name": "role_id",
+        "type": "BIGINT",
+        "size": 19,
+        "nullable": false,
+        "auto": false,
+        "default": null
+      },
+      {
+        "name": "menu_id",
+        "type": "BIGINT",
+        "size": 19,
+        "nullable": false,
+        "auto": false,
+        "default": null
+      }
+    ],
+    "primary": [
+      "role_id",
+      "menu_id"
+    ]
+  },
+  "sys_role_dept": {
+    "columns": [
+      {
+        "name": "role_id",
+        "type": "BIGINT",
+        "size": 19,
+        "nullable": false,
+        "auto": false,
+        "default": null
+      },
+      {
+        "name": "dept_id",
+        "type": "BIGINT",
+        "size": 19,
+        "nullable": false,
+        "auto": false,
+        "default": null
+      }
+    ],
+    "primary": [
+      "role_id",
+      "dept_id"
+    ]
+  },
+  "sys_user_post": {
+    "columns": [
+      {
+        "name": "user_id",
+        "type": "BIGINT",
+        "size": 19,
+        "nullable": false,
+        "auto": false,
+        "default": null
+      },
+      {
+        "name": "post_id",
+        "type": "BIGINT",
+        "size": 19,
+        "nullable": false,
+        "auto": false,
+        "default": null
+      }
+    ],
+    "primary": [
+      "user_id",
+      "post_id"
+    ]
+  },
+  "sys_oper_log": {
+    "columns": [
+      {
+        "name": "oper_id",
+        "type": "BIGINT",
+        "size": 19,
+        "nullable": false,
+        "auto": true,
+        "default": null
+      },
+      {
+        "name": "title",
+        "type": "VARCHAR",
+        "size": 50,
+        "nullable": false,
+        "auto": false,
+        "default": ""
+      },
+      {
+        "name": "business_type",
+        "type": "TINYINT",
+        "size": 3,
+        "nullable": false,
+        "auto": false,
+        "default": "0"
+      },
+      {
+        "name": "method",
+        "type": "VARCHAR",
+        "size": 200,
+        "nullable": false,
+        "auto": false,
+        "default": ""
+      },
+      {
+        "name": "request_method",
+        "type": "VARCHAR",
+        "size": 10,
+        "nullable": false,
+        "auto": false,
+        "default": ""
+      },
+      {
+        "name": "oper_name",
+        "type": "VARCHAR",
+        "size": 50,
+        "nullable": false,
+        "auto": false,
+        "default": ""
+      },
+      {
+        "name": "dept_name",
+        "type": "VARCHAR",
+        "size": 50,
+        "nullable": false,
+        "auto": false,
+        "default": ""
+      },
+      {
+        "name": "oper_url",
+        "type": "VARCHAR",
+        "size": 255,
+        "nullable": false,
+        "auto": false,
+        "default": ""
+      },
+      {
+        "name": "oper_ip",
+        "type": "VARCHAR",
+        "size": 128,
+        "nullable": false,
+        "auto": false,
+        "default": ""
+      },
+      {
+        "name": "oper_location",
+        "type": "VARCHAR",
+        "size": 255,
+        "nullable": false,
+        "auto": false,
+        "default": ""
+      },
+      {
+        "name": "oper_param",
+        "type": "VARCHAR",
+        "size": 2000,
+        "nullable": false,
+        "auto": false,
+        "default": ""
+      },
+      {
+        "name": "json_result",
+        "type": "VARCHAR",
+        "size": 2000,
+        "nullable": false,
+        "auto": false,
+        "default": ""
+      },
+      {
+        "name": "status",
+        "type": "CHAR",
+        "size": 1,
+        "nullable": false,
+        "auto": false,
+        "default": "0"
+      },
+      {
+        "name": "error_msg",
+        "type": "VARCHAR",
+        "size": 2000,
+        "nullable": false,
+        "auto": false,
+        "default": ""
+      },
+      {
+        "name": "oper_time",
+        "type": "DATETIME",
+        "size": 0,
+        "nullable": false,
+        "auto": false,
+        "default": null
+      },
+      {
+        "name": "cost_time",
+        "type": "BIGINT",
+        "size": 19,
+        "nullable": false,
+        "auto": false,
+        "default": "0"
+      }
+    ],
+    "primary": [
+      "oper_id"
+    ]
+  },
+  "sys_dict_type": {
+    "columns": [
+      {
+        "name": "dict_id",
+        "type": "BIGINT",
+        "size": 19,
+        "nullable": false,
+        "auto": true,
+        "default": null
+      },
+      {
+        "name": "dict_name",
+        "type": "VARCHAR",
+        "size": 100,
+        "nullable": false,
+        "auto": false,
+        "default": ""
+      },
+      {
+        "name": "dict_type",
+        "type": "VARCHAR",
+        "size": 100,
+        "nullable": false,
+        "auto": false,
+        "default": ""
+      },
+      {
+        "name": "status",
+        "type": "CHAR",
+        "size": 1,
+        "nullable": false,
+        "auto": false,
+        "default": "0"
+      },
+      {
+        "name": "create_by",
+        "type": "VARCHAR",
+        "size": 64,
+        "nullable": false,
+        "auto": false,
+        "default": ""
+      },
+      {
+        "name": "create_time",
+        "type": "DATETIME",
+        "size": 0,
+        "nullable": false,
+        "auto": false,
+        "default": null
+      },
+      {
+        "name": "update_by",
+        "type": "VARCHAR",
+        "size": 64,
+        "nullable": false,
+        "auto": false,
+        "default": ""
+      },
+      {
+        "name": "update_time",
+        "type": "DATETIME",
+        "size": 0,
+        "nullable": true,
+        "auto": false,
+        "default": null
+      },
+      {
+        "name": "remark",
+        "type": "VARCHAR",
+        "size": 500,
+        "nullable": true,
+        "auto": false,
+        "default": null
+      }
+    ],
+    "primary": [
+      "dict_id"
+    ]
+  },
+  "sys_dict_data": {
+    "columns": [
+      {
+        "name": "dict_code",
+        "type": "BIGINT",
+        "size": 19,
+        "nullable": false,
+        "auto": true,
+        "default": null
+      },
+      {
+        "name": "dict_sort",
+        "type": "INT",
+        "size": 10,
+        "nullable": false,
+        "auto": false,
+        "default": "0"
+      },
+      {
+        "name": "dict_label",
+        "type": "VARCHAR",
+        "size": 100,
+        "nullable": false,
+        "auto": false,
+        "default": ""
+      },
+      {
+        "name": "dict_value",
+        "type": "VARCHAR",
+        "size": 100,
+        "nullable": false,
+        "auto": false,
+        "default": ""
+      },
+      {
+        "name": "dict_type",
+        "type": "VARCHAR",
+        "size": 100,
+        "nullable": false,
+        "auto": false,
+        "default": ""
+      },
+      {
+        "name": "css_class",
+        "type": "VARCHAR",
+        "size": 100,
+        "nullable": true,
+        "auto": false,
+        "default": null
+      },
+      {
+        "name": "list_class",
+        "type": "VARCHAR",
+        "size": 100,
+        "nullable": true,
+        "auto": false,
+        "default": null
+      },
+      {
+        "name": "is_default",
+        "type": "CHAR",
+        "size": 1,
+        "nullable": true,
+        "auto": false,
+        "default": "N"
+      },
+      {
+        "name": "status",
+        "type": "CHAR",
+        "size": 1,
+        "nullable": false,
+        "auto": false,
+        "default": "0"
+      },
+      {
+        "name": "create_by",
+        "type": "VARCHAR",
+        "size": 64,
+        "nullable": false,
+        "auto": false,
+        "default": ""
+      },
+      {
+        "name": "create_time",
+        "type": "DATETIME",
+        "size": 0,
+        "nullable": false,
+        "auto": false,
+        "default": null
+      },
+      {
+        "name": "update_by",
+        "type": "VARCHAR",
+        "size": 64,
+        "nullable": false,
+        "auto": false,
+        "default": ""
+      },
+      {
+        "name": "update_time",
+        "type": "DATETIME",
+        "size": 0,
+        "nullable": true,
+        "auto": false,
+        "default": null
+      },
+      {
+        "name": "remark",
+        "type": "VARCHAR",
+        "size": 500,
+        "nullable": true,
+        "auto": false,
+        "default": null
+      }
+    ],
+    "primary": [
+      "dict_code"
+    ]
+  },
+  "sys_config": {
+    "columns": [
+      {
+        "name": "config_id",
+        "type": "BIGINT",
+        "size": 19,
+        "nullable": false,
+        "auto": true,
+        "default": null
+      },
+      {
+        "name": "config_name",
+        "type": "VARCHAR",
+        "size": 100,
+        "nullable": false,
+        "auto": false,
+        "default": ""
+      },
+      {
+        "name": "config_key",
+        "type": "VARCHAR",
+        "size": 100,
+        "nullable": false,
+        "auto": false,
+        "default": ""
+      },
+      {
+        "name": "config_value",
+        "type": "VARCHAR",
+        "size": 500,
+        "nullable": false,
+        "auto": false,
+        "default": ""
+      },
+      {
+        "name": "config_type",
+        "type": "CHAR",
+        "size": 1,
+        "nullable": false,
+        "auto": false,
+        "default": "N"
+      },
+      {
+        "name": "create_by",
+        "type": "VARCHAR",
+        "size": 64,
+        "nullable": false,
+        "auto": false,
+        "default": ""
+      },
+      {
+        "name": "create_time",
+        "type": "DATETIME",
+        "size": 0,
+        "nullable": false,
+        "auto": false,
+        "default": null
+      },
+      {
+        "name": "update_by",
+        "type": "VARCHAR",
+        "size": 64,
+        "nullable": false,
+        "auto": false,
+        "default": ""
+      },
+      {
+        "name": "update_time",
+        "type": "DATETIME",
+        "size": 0,
+        "nullable": true,
+        "auto": false,
+        "default": null
+      },
+      {
+        "name": "remark",
+        "type": "VARCHAR",
+        "size": 500,
+        "nullable": true,
+        "auto": false,
+        "default": null
+      }
+    ],
+    "primary": [
+      "config_id"
+    ]
+  },
+  "sys_system_setting": {
+    "columns": [
+      {
+        "name": "setting_key",
+        "type": "VARCHAR",
+        "size": 100,
+        "nullable": false,
+        "auto": false,
+        "default": null
+      },
+      {
+        "name": "setting_group",
+        "type": "VARCHAR",
+        "size": 50,
+        "nullable": false,
+        "auto": false,
+        "default": ""
+      },
+      {
+        "name": "setting_value",
+        "type": "LONGTEXT",
+        "size": 0,
+        "nullable": true,
+        "auto": false,
+        "default": null
+      },
+      {
+        "name": "remark",
+        "type": "VARCHAR",
+        "size": 500,
+        "nullable": true,
+        "auto": false,
+        "default": null
+      },
+      {
+        "name": "create_by",
+        "type": "VARCHAR",
+        "size": 64,
+        "nullable": false,
+        "auto": false,
+        "default": ""
+      },
+      {
+        "name": "create_time",
+        "type": "DATETIME",
+        "size": 0,
+        "nullable": false,
+        "auto": false,
+        "default": null
+      },
+      {
+        "name": "update_by",
+        "type": "VARCHAR",
+        "size": 64,
+        "nullable": false,
+        "auto": false,
+        "default": ""
+      },
+      {
+        "name": "update_time",
+        "type": "DATETIME",
+        "size": 0,
+        "nullable": true,
+        "auto": false,
+        "default": null
+      }
+    ],
+    "primary": [
+      "setting_key"
+    ]
+  },
+  "sys_logininfor": {
+    "columns": [
+      {
+        "name": "info_id",
+        "type": "BIGINT",
+        "size": 19,
+        "nullable": false,
+        "auto": true,
+        "default": null
+      },
+      {
+        "name": "user_name",
+        "type": "VARCHAR",
+        "size": 50,
+        "nullable": false,
+        "auto": false,
+        "default": ""
+      },
+      {
+        "name": "ipaddr",
+        "type": "VARCHAR",
+        "size": 128,
+        "nullable": false,
+        "auto": false,
+        "default": ""
+      },
+      {
+        "name": "login_location",
+        "type": "VARCHAR",
+        "size": 255,
+        "nullable": false,
+        "auto": false,
+        "default": ""
+      },
+      {
+        "name": "browser",
+        "type": "VARCHAR",
+        "size": 50,
+        "nullable": false,
+        "auto": false,
+        "default": ""
+      },
+      {
+        "name": "os",
+        "type": "VARCHAR",
+        "size": 50,
+        "nullable": false,
+        "auto": false,
+        "default": ""
+      },
+      {
+        "name": "status",
+        "type": "CHAR",
+        "size": 1,
+        "nullable": false,
+        "auto": false,
+        "default": "0"
+      },
+      {
+        "name": "msg",
+        "type": "VARCHAR",
+        "size": 255,
+        "nullable": false,
+        "auto": false,
+        "default": ""
+      },
+      {
+        "name": "login_time",
+        "type": "DATETIME",
+        "size": 0,
+        "nullable": false,
+        "auto": false,
+        "default": null
+      }
+    ],
+    "primary": [
+      "info_id"
+    ]
+  },
+  "sys_notice": {
+    "primary": [
+      "notice_id"
+    ],
+    "columns": [
+      {
+        "name": "notice_id",
+        "type": "BIGINT",
+        "size": 0,
+        "auto": true,
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "notice_title",
+        "type": "VARCHAR",
+        "size": 255,
+        "auto": false,
+        "nullable": false,
+        "default": ""
+      },
+      {
+        "name": "notice_type",
+        "type": "CHAR",
+        "size": 1,
+        "auto": false,
+        "nullable": false,
+        "default": "1"
+      },
+      {
+        "name": "notice_content",
+        "type": "TEXT",
+        "size": 0,
+        "auto": false,
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "status",
+        "type": "CHAR",
+        "size": 1,
+        "auto": false,
+        "nullable": false,
+        "default": "0"
+      },
+      {
+        "name": "create_by",
+        "type": "VARCHAR",
+        "size": 64,
+        "auto": false,
+        "nullable": false,
+        "default": ""
+      },
+      {
+        "name": "create_time",
+        "type": "DATETIME",
+        "size": 0,
+        "auto": false,
+        "nullable": false,
+        "default": null
+      },
+      {
+        "name": "update_time",
+        "type": "DATETIME",
+        "size": 0,
+        "auto": false,
+        "nullable": true,
+        "default": null
+      },
+      {
+        "name": "remark",
+        "type": "VARCHAR",
+        "size": 500,
+        "auto": false,
+        "nullable": false,
+        "default": ""
+      }
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+[Unit]
+Description=RuoYi-Rust BY
+After=network.target
+
+[Service]
+Type=simple
+User=ruoyi
+Group=ruoyi
+WorkingDirectory=/opt/ruoyi-rust-by
+ExecStart=/opt/ruoyi-rust-by/ruoyi-rust-by serve
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/ruoyi-rust-by/uploads
+UMask=0027
+
+[Install]
+WantedBy=multi-user.target
