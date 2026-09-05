@@ -1,5 +1,7 @@
 # 前端一致性与浏览器验收
 
+> v0.1.0 历史验收记录。导入禁用等描述仅适用于旧版；当前五项集成已实现，见 [VERSIONS.md](VERSIONS.md)。
+
 - source visual truth path: `docs/screenshots/reference-users-desktop.png`、`reference-users-mobile.png`。来源为 ruoyi-php-by 公开前端（其基线为 ruoyi-go-by `fbaf4bf`），连接同一份隔离测试数据。
 - implementation screenshot path: `docs/screenshots/users-desktop.png`、`users-mobile.png`、`settings-desktop.png`。
 - viewport: 桌面 1440×1000 CSS px，手机 390×844 CSS px。

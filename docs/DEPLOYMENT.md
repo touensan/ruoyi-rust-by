@@ -1,5 +1,7 @@
 # 部署
 
+先确认 [源码与下载版本](VERSIONS.md)。按当前 main 文档升级需要当前源码构建的后端和前端；历史标签/旧包不会随 main 更新。
+
 ## 编译与运行的区别
 
 Rust 需要用 Cargo 编译后端；Vue 使用 Vite 打包前端。最终服务器运行 `ruoyi-rust-by` 二进制，Nginx 转发 HTTP 请求。运行服务时不需要 Rust 编译器、Node.js、PHP-FPM 或 Composer。

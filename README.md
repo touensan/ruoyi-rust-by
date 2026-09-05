@@ -2,11 +2,15 @@
 
 保留 **RuoYi-Go BY 的 Vue 3 / TypeScript 管理界面**，后端改用 **Rust + Axum + MySQL** 的开源后台管理框架。
 
-[源码](https://github.com/touensan/ruoyi-rust-by) · [发布版本](https://github.com/touensan/ruoyi-rust-by/releases) · [功能范围](docs/FEATURES.md) · [部署](docs/DEPLOYMENT.md) · [开发与验证](docs/DEVELOPMENT.md)
+[源码](https://github.com/touensan/ruoyi-rust-by) · [历史下载包](https://github.com/touensan/ruoyi-rust-by/releases) · [功能范围](docs/FEATURES.md) · [部署](docs/DEPLOYMENT.md) · [开发与验证](docs/DEVELOPMENT.md)
 
-**v0.2.0 为预发布版本。** 已补齐易支付 V1/V2、SMTP 发送、UTC 定时任务、Redis 缓存监控和 XLSX 用户导入。不是所有 RuoYi-Go BY / Qiluo 功能的完整移植；配置、升级和边界见 [集成说明](docs/INTEGRATIONS.md)。
+**当前 main 为 v0.2.0 源码，尚未发布对应 Release 下载包。** 已补齐易支付 V1/V2、SMTP 发送、UTC 定时任务、Redis 缓存监控和 XLSX 用户导入。不是所有 RuoYi-Go BY / Qiluo 功能的完整移植；配置、升级和边界见 [集成说明](docs/INTEGRATIONS.md)。
 
 ![RuoYi-Rust BY 用户管理](docs/screenshots/users-desktop.png)
+
+## 当前源码与下载版本
+
+当前 `main` 的源码版本为 **v0.2.0**，已实现支付、SMTP、定时任务、Redis 监控、XLSX 用户导入和统一后台 RBAC。**GitHub 现有 Release 与运行下载包仍为历史 v0.1.0，尚未发布 v0.2.0 下载包。** 完整对应关系见 [版本与下载状态](docs/VERSIONS.md)。
 
 ## 统一后台
 
