@@ -1,7 +1,7 @@
 {
   "name": "ruoyi-rust-by-admin",
   "version": "3.9.2",
-  "description": "RuoYi-Rust BY 管理端",
+  "description": "RuoYi-Rust BY 统一后台",
   "author": "touensan",
   "license": "MIT",
   "type": "module",
@@ -9,7 +9,8 @@
     "dev": "vite",
     "build:prod": "vite build",
     "build:stage": "vite build --mode staging",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test:rbac": "node --test tests/rbac.test.cjs"
   },
   "repository": {
     "type": "git",

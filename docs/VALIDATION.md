@@ -66,3 +66,11 @@ HTTP 测试覆盖鉴权与敏感字段输出、五种数据范围、跨范围读
 截图和详细对照见仓库根目录 `design-qa.md`。
 
 开启 CAPTCHA_ENABLED 后，浏览器人工识读 PNG 并成功登录；替换为无效令牌后正确跳转 `/admin/login?redirect=/index`。手机登录截图 390×844 无横向溢出、无密码 Cookie，未出现未预期页面错误。对应截图为 `docs/screenshots/login-captcha-desktop.png` 与 `login-captcha-mobile.png`。
+
+## 2026-09-05｜统一后台 RBAC 增量验证
+
+- Rust 1.98.1：14 项单元测试、Clippy（`-D warnings`）、fmt 及 musl release 构建通过。18 组真实 MySQL 5.7.43/Redis/API 回归通过，包含新增的角色继承、共同个人中心、动态路由和停用后即时拒绝场景。
+- Node 22.22.3：`npm ci`、7 项 `npm run test:rbac` 和生产构建通过。
+- Playwright 使用真实测试 API 和两类合成账号，验证共用登录、管理员访问普通功能及管理功能、普通用户仅见普通菜单且管理接口返回 403；1440×1000 与 390×844 页面通过，未观察到 pageerror 或异常 API 请求。截图只用于本次合成测试验收。
+- 最终受测 Rust musl 二进制 SHA-256：`3f02a77b255c1c1a59a1d342dde13410fc396e3340f41eb2993342ba513ffa58`，取回后版本检查通过。代码仍为 0.2.0，本次没有创建新 Release/标签或替换此前发布包。
+- 数据库结构、显式角色分配和数据范围未因该实现自动迁移；只是功能权限计算时加入有效 `common` 角色。依赖锁文件未变更，既有依赖风险记录继续适用。

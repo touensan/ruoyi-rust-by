@@ -7,14 +7,14 @@ import useUserStore from '@/store/modules/user'
 export default {
   mounted(el: HTMLElement, binding: DirectiveBinding, vnode: any) {
     const { value } = binding
-    const super_admin = "admin"
+    const superAdmin = useUserStore().permissions.includes("*:*:*")
     const roles = useUserStore().roles
 
     if (value && value instanceof Array && value.length > 0) {
       const roleFlag = value
 
-      const hasRole = roles.some((role: string) => {
-        return super_admin === role || roleFlag.includes(role)
+      const hasRole = superAdmin || roles.some((role: string) => {
+        return roleFlag.includes(role)
       })
 
       if (!hasRole) {

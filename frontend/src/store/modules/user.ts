@@ -58,10 +58,11 @@ const useUserStore = defineStore(
             }
             if (res.roles && res.roles.length > 0) { // 验证返回的roles是否是一个非空数组
               this.roles = res.roles
-              this.permissions = res.permissions
             } else {
               this.roles = ['ROLE_DEFAULT']
             }
+            // Always replace permissions, including after all roles are revoked.
+            this.permissions = Array.isArray(res.permissions) ? res.permissions : []
             this.id = user.userId || ''
             this.name = user.userName || ''
             this.nickName = user.nickName || ''

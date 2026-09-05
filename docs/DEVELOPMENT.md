@@ -53,3 +53,15 @@ CI 模板位于 `docs/ci/github-actions.yml`。本次 GitHub 凭证不具有 wor
 ## v0.2.0 集成模块
 
 新增模块和增量迁移见 [INTEGRATIONS.md](INTEGRATIONS.md)。`tests/integrations_test.py` 在原十组 API 回归上增加支付 V1/V2、SMTP、Redis、调度和 XLSX 事务/数据范围用例；仅在显式测试模式的隔离 MySQL/Redis 上运行，网关与 SMTP 为进程内回环协议接收器。
+
+## 2026-09-05｜统一后台 RBAC（实现与验证完成）
+
+统一架构契约见 [ARCHITECTURE.md](ARCHITECTURE.md)。`admin` 单向继承启用的 `common` 功能授权，服务端菜单、路由、接口与前端权限规则一致；前端全权限判断来自服务端 `*:*:*`，角色全部撤销时同步清空旧权限。
+
+- Rust 1.98.1：14 项单元测试、Clippy（`-D warnings`）、fmt 及 musl release 构建通过。18 组真实 MySQL 5.7.43/Redis/API 回归通过，包含新增的角色继承、共同个人中心、动态路由和停用后即时拒绝场景。
+- Node 22.22.3：`npm ci`、7 项 `npm run test:rbac` 和生产构建通过。
+- Playwright 使用真实测试 API 和两类合成账号，验证共用登录、管理员访问普通功能及管理功能、普通用户仅见普通菜单且管理接口返回 403；1440×1000 与 390×844 页面通过，未观察到 pageerror 或异常 API 请求。截图只用于本次合成测试验收。
+- 最终受测 Rust musl 二进制 SHA-256：`3f02a77b255c1c1a59a1d342dde13410fc396e3340f41eb2993342ba513ffa58`，取回后版本检查通过。代码仍为 0.2.0，本次没有创建新 Release/标签或替换此前发布包。
+- 数据库结构、显式角色分配和数据范围未因该实现自动迁移；只是功能权限计算时加入有效 `common` 角色。依赖锁文件未变更，既有依赖风险记录继续适用。
+
+本次调整公开框架源码与开发约定，不涉及其他业务站点的生产部署。Go/PHP 前端通过权限函数回归和构建；两类账号的真实浏览器场景在同系列 Rust 测试实例执行，不把它描述为三个后端均运行了浏览器验收。

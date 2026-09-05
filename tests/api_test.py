@@ -52,6 +52,47 @@ class API(unittest.TestCase):
         self.assertEqual(request('POST','logout',token='0'*64)[0],200)
         self.assertEqual(request('POST','register',{'username':'anything','password':self.userpass})[0],403)
 
+    def test_unified_backend_role_inheritance(self):
+        common=self.api('GET','system/role/2')['data']
+        common_menus=self.api('GET','system/menu/roleMenuTreeselect/2')['checkedKeys']
+        valid={m['menuId'] for m in self.api('GET','system/menu/list')['data']}
+        common_menus=[mid for mid in common_menus if mid in valid]
+        created=[]; menu=None
+        try:
+            menu=self.api('POST','system/menu',{'menuName':'普通功能测试','parentId':0,'path':'member'+self.suffix,'component':'system/user/profile/index','menuType':'C','perms':'system:post:list','status':'0'})['data']
+            self.api('PUT','system/role',{'roleId':2,'status':'0','menuIds':[menu]})
+            tokens=[]
+            for name,roles in [('manager',[1,self.roleid]),('member',[2])]:
+                username=name+self.suffix
+                created.append(self.api('POST','system/user',{'userName':username,'nickName':'统一后台测试','password':self.userpass,'deptId':103,'roleIds':roles})['data'])
+                tokens.append(self.api('POST','login',{'username':username,'password':self.userpass})['token'])
+            manager,member=tokens
+            info=self.api('GET','getInfo',token=manager)
+            self.assertTrue({'admin','common'} <= set(info['roles']))
+            self.assertNotIn('common',[r['roleKey'] for r in info['user']['roles']])
+            self.assertNotIn('*:*:*',info['permissions']);self.assertFalse(info['user']['admin'])
+            self.assertIn('common',self.api('GET','getInfo')['roles'])
+            for token in [self.token,manager,member]:
+                self.api('GET','system/user/profile',token=token)
+                self.api('GET','system/post/list',token=token)
+                self.assertIn('member'+self.suffix,json.dumps(self.api('GET','getRouters',token=token)))
+            self.api('GET','system/user/list',token=manager)
+            self.api('GET','system/user/list',token=member,expected=403)
+            self.api('POST','system/role',{'roleName':'forbidden'},manager,403)
+            self.api('GET','monitor/server',token=member,expected=403)
+            self.api('PUT','system/role',{'roleId':2,'status':'1'})
+            for token in [manager,member]:
+                self.assertNotIn('common',self.api('GET','getInfo',token=token)['roles'])
+                self.api('GET','system/post/list',token=token,expected=403)
+                self.assertNotIn('member'+self.suffix,json.dumps(self.api('GET','getRouters',token=token)))
+            self.api('PUT','system/role',{'roleId':2,'status':'0'})
+            self.api('PUT','system/menu',{'menuId':menu,'status':'1'})
+            self.api('GET','system/post/list',token=manager,expected=403)
+        finally:
+            self.api('PUT','system/role',{'roleId':2,'status':common['status'],'menuIds':common_menus})
+            for uid in created:self.api('DELETE','system/user/'+str(uid))
+            if menu:self.api('DELETE','system/menu/'+str(menu))
+
     def test_data_scope_and_privilege_escalation(self):
         rows=self.api('GET','system/user/list',token=self.member)['rows'];self.assertEqual(len(rows),1);self.assertEqual(rows[0]['userId'],self.users[0][0])
         self.api('GET','system/user/'+str(self.users[1][0]),token=self.member,expected=404)

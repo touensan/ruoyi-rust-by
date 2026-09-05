@@ -95,6 +95,7 @@ pub async fn verify(app: &App, p: String, hash: String) -> Result<bool> {
 pub struct Actor {
     pub user: Value,
     pub roles: Vec<Value>,
+    pub role_keys: Vec<String>,
     pub menus: Vec<Value>,
     pub permissions: HashSet<String>,
 }
@@ -133,10 +134,36 @@ pub async fn actor(app: &App, h: &HeaderMap) -> Result<Actor> {
         ));
     }
     let roles=db::rows(&app.pool,"SELECT r.* FROM sys_role r JOIN sys_user_role ur ON r.role_id=ur.role_id WHERE ur.user_id=? AND r.status='0' AND r.delete_time IS NULL",&[user["userId"].clone()]).await?;
-    let menus = if db::num(&user["userId"]) == 1 {
+    // Inherited roles affect functions, not explicit assignments or data scope.
+    let root = db::num(&user["userId"]) == 1;
+    let mut effective = roles.clone();
+    if root || roles.iter().any(|r| r["roleKey"] == "admin") {
+        let common = db::rows(
+            &app.pool,
+            "SELECT * FROM sys_role WHERE role_key='common' AND status='0' AND delete_time IS NULL",
+            &[],
+        )
+        .await?;
+        for role in common {
+            if !effective.iter().any(|r| r["roleId"] == role["roleId"]) {
+                effective.push(role);
+            }
+        }
+    }
+    let mut role_keys: Vec<String> = effective
+        .iter()
+        .map(|r| db::scalar(&r["roleKey"]))
+        .collect();
+    if root && !role_keys.iter().any(|key| key == "admin") {
+        role_keys.push("admin".into());
+    }
+    let role_ids: Vec<Value> = effective.iter().map(|r| r["roleId"].clone()).collect();
+    let menus = if root {
         db::rows(&app.pool,"SELECT * FROM sys_menu WHERE status='0' AND delete_time IS NULL ORDER BY order_num,menu_id",&[]).await?
+    } else if role_ids.is_empty() {
+        Vec::new()
     } else {
-        db::rows(&app.pool,"SELECT DISTINCT m.* FROM sys_menu m JOIN sys_role_menu rm ON rm.menu_id=m.menu_id JOIN sys_role r ON rm.role_id=r.role_id JOIN sys_user_role ur ON ur.role_id=r.role_id WHERE ur.user_id=? AND r.status='0' AND r.delete_time IS NULL AND m.status='0' AND m.delete_time IS NULL ORDER BY m.order_num,m.menu_id",&[user["userId"].clone()]).await?
+        db::rows(&app.pool, &format!("SELECT DISTINCT m.* FROM sys_menu m JOIN sys_role_menu rm ON rm.menu_id=m.menu_id WHERE rm.role_id IN ({}) AND m.status='0' AND m.delete_time IS NULL ORDER BY m.order_num,m.menu_id", db::placeholders(role_ids.len())), &role_ids).await?
     };
     let permissions = menus
         .iter()
@@ -151,6 +178,7 @@ pub async fn actor(app: &App, h: &HeaderMap) -> Result<Actor> {
     Ok(Actor {
         user,
         roles,
+        role_keys,
         menus,
         permissions,
     })
@@ -347,7 +375,7 @@ pub async fn private_api(app: &App, a: &Actor, i: &Input) -> Result<Option<Value
             )
             .await?;
             Ok(Some(
-                json!({"code":200,"user":user,"roles":a.roles.iter().map(|r|r["roleKey"].clone()).collect::<Vec<_>>(),"permissions":if a.admin(){vec!["*:*:*".to_string()]}else{a.permissions.iter().cloned().collect()}}),
+                json!({"code":200,"user":user,"roles":a.role_keys,"permissions":if a.admin(){vec!["*:*:*".to_string()]}else{a.permissions.iter().cloned().collect()}}),
             ))
         }
         ("GET", "getRouters") => Ok(Some(data(json!(routers(&a.menus, 0, 0))))),
