@@ -1,6 +1,6 @@
 <template>
   <div class="app-container system-settings">
-    <el-alert title="首版支持保存站点、支付和邮箱配置；支付网关与邮件发送暂未接通。" type="info" :closable="false" show-icon style="margin-bottom: 16px" />
+    <el-alert title="支付和邮件操作使用已保存的配置。启用后可创建测试订单或发送测试邮件。" type="info" :closable="false" show-icon style="margin-bottom: 16px" />
     <el-tabs v-model="activeTab" class="settings-tabs">
       <el-tab-pane label="站点配置" name="site">
         <div class="setting-section">
@@ -180,7 +180,7 @@
             </el-row>
             <div class="form-actions payment-actions">
               <el-button type="primary" icon="Check" :loading="saving.payment" @click="submitPayment" v-hasPermi="['system:setting:edit']">保存支付配置</el-button>
-              <el-button icon="Connection" :loading="paymentTesting" @click="runPaymentTest()" v-hasPermi="['system:setting:pay:test']">功能测试</el-button>
+              <el-button icon="Connection" :loading="paymentTesting" @click="runPaymentTest()" v-hasPermi="['system:setting:pay:test']">创建 0.01 元测试订单</el-button>
             </div>
           </el-form>
         </div>
@@ -217,6 +217,16 @@
                 </el-collapse>
               </template>
             </el-table-column>
+          </el-table>
+        </div>
+        <div class="setting-section">
+          <div class="section-heading"><h3>最近支付订单</h3><el-button :loading="ordersLoading" @click="loadOrders">刷新订单</el-button></div>
+          <el-table :data="paymentOrders" style="width: 100%">
+            <el-table-column label="商户订单号" prop="outTradeNo" min-width="260" />
+            <el-table-column label="金额（元）" width="110"><template #default="{ row }">{{ (row.amountCents / 100).toFixed(2) }}</template></el-table-column>
+            <el-table-column label="状态" width="110"><template #default="{ row }"><el-tag :type="row.status === 'paid' ? 'success' : 'info'">{{ row.status === 'paid' ? '已支付' : '待确认' }}</el-tag></template></el-table-column>
+            <el-table-column label="创建时间" prop="createTime" min-width="180" />
+            <el-table-column label="操作" width="120"><template #default="{ row }"><el-button link type="primary" :loading="queryingOrder === row.outTradeNo" @click="queryOrder(row.outTradeNo)" v-hasPermi="['system:setting:pay:test']">查询网关</el-button></template></el-table-column>
           </el-table>
         </div>
       </el-tab-pane>
@@ -327,12 +337,24 @@ import {
   updateSiteSetting
 } from '@/api/system/settings'
 import { getToken } from '@/utils/auth'
+import request from '@/utils/request'
 import type { UploadFileResult } from '@/types/api/common'
 
 const { proxy } = getCurrentInstance() as any
 
 const activeTab = ref('site')
 const loading = ref(false)
+const paymentOrders = ref<any[]>([])
+const ordersLoading = ref(false)
+const queryingOrder = ref('')
+async function loadOrders() {
+  ordersLoading.value = true
+  try { const response: any = await request({ url: '/payment/orders', method: 'get' }); paymentOrders.value = response.rows } finally { ordersLoading.value = false }
+}
+async function queryOrder(number: string) {
+  queryingOrder.value = number
+  try { await request({ url: '/payment/orders/' + encodeURIComponent(number) + '/query', method: 'post' }); await loadOrders() } finally { queryingOrder.value = '' }
+}
 const paymentTesting = ref(false)
 const mailTesting = ref(false)
 const saving = reactive({ site: false, payment: false, mail: false })
@@ -481,7 +503,8 @@ function submitMail() {
   })
 }
 
-function runPaymentTest() {
+async function runPaymentTest() {
+  try { await proxy.$modal.confirm("将使用已保存的配置创建真实的 0.01 元订单。创建订单不会自动扣款，是否继续？") } catch { return }
   paymentTesting.value = true
   paymentResult.value = undefined
   testPaymentSetting({
@@ -490,8 +513,9 @@ function runPaymentTest() {
     returnUrl: paymentForm.returnUrl || generated.returnUrl
   }).then(response => {
     paymentResult.value = response.data
+    loadOrders()
     if (response.data?.success) {
-      proxy.$modal.msgSuccess('测试通过')
+      proxy.$modal.msgSuccess('测试订单已创建，付款后以订单状态为准')
     } else {
       proxy.$modal.msgWarning('测试未通过')
     }

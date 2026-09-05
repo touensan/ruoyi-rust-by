@@ -1,7 +1,8 @@
 <template>
   <div class="app-container">
+    <el-alert title="仅管理 REDIS_CACHE_PREFIX 指定的应用缓存。字符串预览最多 64 KB；清理操作不会影响其他前缀。" type="info" :closable="false" style="margin-bottom: 12px" />
     <el-row :gutter="10">
-      <el-col :span="8">
+      <el-col :xs="24" :md="8">
         <el-card style="height: calc(100vh - 125px)">
           <template #header>
             <Collection style="width: 1em; height: 1em; vertical-align: middle;" /> <span style="vertical-align: middle;">缓存列表</span>
@@ -60,7 +61,7 @@
         </el-card>
       </el-col>
 
-      <el-col :span="8">
+      <el-col :xs="24" :md="8">
         <el-card style="height: calc(100vh - 125px)">
           <template #header>
             <Key style="width: 1em; height: 1em; vertical-align: middle;" /> <span style="vertical-align: middle;">键名列表</span>
@@ -111,7 +112,7 @@
         </el-card>
       </el-col>
 
-      <el-col :span="8">
+      <el-col :xs="24" :md="8">
         <el-card :bordered="false" style="height: calc(100vh - 125px)">
           <template #header>
             <Document style="width: 1em; height: 1em; vertical-align: middle;" /> <span style="vertical-align: middle;">缓存内容</span>
@@ -121,7 +122,7 @@
               type="primary"
               icon="Refresh"
               @click="handleClearCacheAll()"
-              >清理全部</el-button
+              >清理应用缓存</el-button
             >
           </template>
           <el-form :model="cacheForm">

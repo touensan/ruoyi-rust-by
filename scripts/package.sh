@@ -15,6 +15,6 @@ cp "$binary_path" "$package_dir/ruoyi-rust-by"
 cp -a "$project_dir/frontend/dist/." "$package_dir/public/admin/"
 cp "$project_dir/.env.example" "$project_dir/LICENSE" "$project_dir/THIRD_PARTY_NOTICES.md" "$project_dir/README.md" "$package_dir/"
 cp -a "$project_dir/deploy" "$project_dir/docs" "$package_dir/"
-tar -C "$package_dir" -czf "$output_dir/ruoyi-rust-by-v0.1.0-linux-x86_64.tar.gz" .
-(cd "$output_dir" && sha256sum ruoyi-rust-by-v0.1.0-linux-x86_64.tar.gz > SHA256SUMS)
-printf 'Package: %s\n' "$output_dir/ruoyi-rust-by-v0.1.0-linux-x86_64.tar.gz"
+tar -C "$package_dir" -czf "$output_dir/ruoyi-rust-by-v0.2.0-linux-x86_64.tar.gz" .
+(cd "$output_dir" && sha256sum ruoyi-rust-by-v0.2.0-linux-x86_64.tar.gz > SHA256SUMS)
+printf 'Package: %s\n' "$output_dir/ruoyi-rust-by-v0.2.0-linux-x86_64.tar.gz"

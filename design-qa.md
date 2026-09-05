@@ -1,34 +1,36 @@
-# 前端一致性与浏览器验收
+# v0.2.0 五项集成的界面与浏览器验收
 
-- source visual truth path: `docs/screenshots/reference-users-desktop.png`、`reference-users-mobile.png`。来源为 ruoyi-php-by 公开前端（其基线为 ruoyi-go-by `fbaf4bf`），连接同一份隔离测试数据。
-- implementation screenshot path: `docs/screenshots/users-desktop.png`、`users-mobile.png`、`settings-desktop.png`。
-- viewport: 桌面 1440×1000 CSS px，手机 390×844 CSS px。
-- source / implementation pixel dimensions: 分别与对应视口完全一致，deviceScaleFactor=1；均为浏览器原始截图，无缩放补偿。
-- state: 管理员登录，用户管理列表加载完成；数据来自专用测试库。桌面保留原布局；小屏幕默认折叠组织树。
-- focused region: `docs/screenshots/reference-users-table.png` 与 `users-table.png`，均为 988×383，检查表格文字、行高、按钮、状态开关和列对齐。
+日期：2026-09-05。沿用已有若依界面，使用 Product Design 工作流检查现有视觉样式与新增操作。v0.1.0 原验收保留在 `docs/DESIGN_QA_V0_1.md`。
 
-## 检查结果
+- source visual truth path：`docs/screenshots/settings-desktop.png`（v0.1.0 原界面）、`docs/screenshots/reference-users-desktop.png` / `users-mobile.png`；缓存复核前图 `docs/screenshots/features/cache-mobile-before.png`。
+- implementation screenshot path：`docs/screenshots/features/settings-desktop.png`、`payment-desktop.png`、`job-log-desktop.png`、`import-mobile.png`、`cache-mobile.png`。
+- viewport：桌面 1440×1000、手机 390×844 CSS px；截图像素与 CSS 尺寸相同，deviceScaleFactor=1，无密度缩放。应用内滚动容器截图代表当时可见视口，不声称涵盖所有滚动内容。
+- state：隔离测试管理员登录；桌面配置/表格加载完成；手机侧栏关闭、弹窗过渡完成。数据均为测试数据；站点图标、描述和版权值与原图有测试数据差异，不属于布局变更。
+- full-view comparison evidence：同一比较输入中打开旧/新系统配置全图；同一比较输入中打开缓存移动端修复前/后图。未将分别查看图片称为并排对照。
+- focused region：直接检查原尺寸配置标签/输入框、手机导入弹窗的说明与操作区、缓存图表标签与图例、任务日志表格；这些字在原尺寸输入中清晰，无需额外裁剪。
 
-| 项目 | 结果 |
+## 五项视觉检查
+
+| 表面 | 结果 |
 | --- | --- |
-| 字体与层级 | 沿用原字体栈与字号、字重，桌面标题/筛选/表格层级一致 |
-| 间距与布局 | 桌面 200px 主侧栏、220px 组织树、筛选和表格布局一致；手机修复组织树占据主要视口的问题 |
-| 色彩与状态 | 沿用原深色侧栏、蓝色主色、边框、禁用和启用状态，不另造主题 |
-| 图像与图标 | 沿用原 logo、头像及图标资源，没有用手绘图形替换；图像在原始比例下清晰 |
-| 文案 | 项目名和技术栈改为 Rust；未实现功能标明状态；导入按钮禁用；配置图标上传提示与 PNG 支持一致 |
-| 交互 | 已检查登录、动态菜单、用户/角色/部门/字典/参数/系统配置/生成器/服务监控页面，以及退出后的 /admin/login 跳转 |
-| 浏览器存储 | 不保存密码 Cookie；请求防重复提交不再写入 sessionStorage；实际检查 sessionObj 不存在 |
-| 控制台 | 最终对照截图验收无未预期 JavaScript 或控制台错误 |
+| 字体与层级 | 原字体栈、字重、表格/表单字号保持；手机弹窗说明正常换行 |
+| 间距与布局 | 桌面沿用原侧栏和双列表单；导入弹窗约 94vw；手机四条验收路由 document.scrollWidth 均为 390 |
+| 色彩与状态 | 保留深色侧栏、蓝色按钮、成功/待确认状态色；没有新增不一致主题 |
+| 图像与图标 | 沿用原 Logo、头像和 Element 图标，比例清晰，无替代手绘资产 |
+| 文案与操作 | 删除支付/邮件“未接通”旧提示；下单明确说明 0.01 元及确认；XLSX 限额、更新规则和 UTC 调度有清晰说明 |
 
-## 对照历史与修复
+## 发现、修复和复核历史
 
-- [P2，已修复] 手机原组织树为 220px，挤压筛选项和用户列表。旧图 `docs/screenshots/users-mobile-before.png`；修复为手机初始折叠至 20px、选择部门后收起，并让筛选项自适应宽度。新图 `users-mobile.png`，390px 视口的 document.scrollWidth=390。表格保留内部横向滚动。
-- [P2，已修复] 异步切页后直接截图会捕获加载遮罩或旧视图淡出状态。最终截图等待目标表格行、网络请求结束和过渡完成，旧加载中截图不作为验收证据。
-- [P2，已修复] 子目录下退出地址与失效会话处理需一致。前端使用 BASE_URL + login，后端 logout 幂等，避免失效令牌阻断退出。
-- 项目名称、Rust 技术说明、功能状态提示与小屏幕折叠属于本项目的预期差异。
+- [P2，已修复] 系统配置顶部仍称支付/邮件未接通。改为说明使用已保存配置，重新截图和旧版界面对照确认；表单布局保持一致。
+- [P2，已修复] 原缓存图表在 390px 下外置长标签被裁切。小屏改用可翻页的紧凑图例，桌面保留原标注；`cache-mobile-before.png` 与 `cache-mobile.png` 在同一输入中对照，裁切问题已消除。
+- 导入/任务弹窗宽度与任务表单分列已适配小屏。数据库字段与图表单位核对时修正任务结束时间映射、Redis 内存数值换算及空数据库 0 显示。
+- 初次手机截屏赶上弹窗动画，另一次截到展开的侧栏；这些属于状态不一致，已使用真实关闭侧栏操作并等待过渡后重新捕获，不作为产品缺陷或最终证据。
+- 浏览器脚本的同名输入框、按钮文案定位及 SSH 预览隧道问题已修正；不计为产品修复。
 
-未发现尚待修复的 P0/P1/P2；本次验证不代表所有上游未启用视图或所有业务弹窗已完成全面移动端审计。
+## 交互与范围
 
-补充验证：`docs/screenshots/login-captcha-desktop.png`（1440×1000）与 `login-captcha-mobile.png`（390×844）验证开启验证码的真实登录。失效令牌正确返回登录页并保留 redirect 参数；手机登录框适配视口，密码 Cookie 不存在。
+已实际操作登录、刷新订单、取消下单确认、新增暂停任务、执行一次、查看任务日志、Redis 两个页面、打开导入和下载 XLSX 模板。浏览器未观察到 pageerror、console error 或失败 API。真实工作簿写入、支付签名/到账和 SMTP 投递由 17 组协议/API 回归验证，不把打开页面当作真实商户付款或外部邮件送达。
+
+没有待修复的 P0/P1/P2；没有扩展审计所有上游未启用页面。Redis 信息表格保留容器内横向滚动，应用缓存列表在手机上纵向排列。
 
 final result: passed

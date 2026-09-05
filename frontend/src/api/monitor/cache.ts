@@ -20,7 +20,7 @@ export function listCacheName(): Promise<AjaxResult<SysCache[]>> {
 // 查询缓存键名列表
 export function listCacheKey(cacheName: string): Promise<AjaxResult<string[]>> {
   return request({
-    url: '/monitor/cache/getKeys/' + cacheName,
+    url: '/monitor/cache/getKeys/' + encodeURIComponent(cacheName),
     method: 'get'
   })
 }
@@ -28,7 +28,7 @@ export function listCacheKey(cacheName: string): Promise<AjaxResult<string[]>> {
 // 查询缓存内容
 export function getCacheValue(cacheName: string, cacheKey: string): Promise<AjaxResult<SysCache>> {
   return request({
-    url: '/monitor/cache/getValue/' + cacheName + '/' + cacheKey,
+    url: '/monitor/cache/getValue/' + encodeURIComponent(cacheName) + '/' + encodeURIComponent(cacheKey),
     method: 'get'
   })
 }
@@ -36,7 +36,7 @@ export function getCacheValue(cacheName: string, cacheKey: string): Promise<Ajax
 // 清理指定名称缓存
 export function clearCacheName(cacheName: string): Promise<AjaxResult> {
   return request({
-    url: '/monitor/cache/clearCacheName/' + cacheName,
+    url: '/monitor/cache/clearCacheName/' + encodeURIComponent(cacheName),
     method: 'delete'
   })
 }
@@ -44,7 +44,7 @@ export function clearCacheName(cacheName: string): Promise<AjaxResult> {
 // 清理指定键名缓存
 export function clearCacheKey(cacheKey: string): Promise<AjaxResult> {
   return request({
-    url: '/monitor/cache/clearCacheKey/' + cacheKey,
+    url: '/monitor/cache/clearCacheKey/' + encodeURIComponent(cacheKey),
     method: 'delete'
   })
 }

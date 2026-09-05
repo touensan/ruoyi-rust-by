@@ -1,7 +1,12 @@
 mod auth;
+mod cache;
 mod db;
+mod excel;
 mod extra;
 mod generator;
+mod jobs;
+mod mail;
+mod payment;
 mod system;
 use axum::{
     Json, Router,
@@ -63,6 +68,7 @@ pub struct App {
     schema: Arc<Value>,
     gates: Arc<Mutex<auth::Gates>>,
     passwords: Arc<tokio::sync::Semaphore>,
+    imports: Arc<tokio::sync::Semaphore>,
     started: Instant,
 }
 fn env(k: &str, d: &str) -> String {
@@ -127,6 +133,12 @@ async fn run() -> Result<()> {
     let url = std::env::var("DATABASE_URL").map_err(|_| AppError::bad("请配置 DATABASE_URL"))?;
     let pool = sqlx::mysql::MySqlPoolOptions::new()
         .max_connections(10)
+        .after_connect(|conn, _| {
+            Box::pin(async move {
+                sqlx::query("SET time_zone='+00:00'").execute(conn).await?;
+                Ok(())
+            })
+        })
         .acquire_timeout(Duration::from_secs(10))
         .connect(&url)
         .await?;
@@ -161,13 +173,16 @@ async fn run() -> Result<()> {
         schema: Arc::new(serde_json::from_str(include_str!("../database/schema.json")).unwrap()),
         gates: Arc::new(Mutex::new(auth::Gates::default())),
         passwords: Arc::new(tokio::sync::Semaphore::new(4)),
+        imports: Arc::new(tokio::sync::Semaphore::new(1)),
         started: Instant::now(),
     };
     tokio::fs::create_dir_all("uploads")
         .await
         .map_err(|_| AppError::bad("不能创建 uploads 目录"))?;
+    jobs::start(app.clone());
     let api = Router::new()
         .route("/common/upload", post(extra::upload))
+        .route("/system/user/importData", post(excel::import))
         .route("/system/user/profile/avatar", post(extra::upload))
         .fallback(any(dispatch))
         .with_state(app.clone())
@@ -249,10 +264,21 @@ async fn dispatch(
     if input.path == "site/config" && input.method == Method::GET {
         return Ok(Json(data(extra::settings(&app, "site", true).await?)).into_response());
     }
+    if let Some(response) = payment::public(&app, &input).await? {
+        return Ok(response);
+    }
     let actor = auth::actor(&app, &input.headers).await?;
     let start = Instant::now();
     let response = if let Some(v) = auth::private_api(&app, &actor, &input).await? {
         Ok(Json(v).into_response())
+    } else if input.path.starts_with("monitor/job") {
+        jobs::handle(&app, &actor, &input).await
+    } else if input.path.starts_with("monitor/cache") {
+        cache::handle(&app, &actor, &input).await
+    } else if input.path.starts_with("payment/") {
+        payment::handle(&app, &actor, &input).await
+    } else if input.path == "system/user/importTemplate" {
+        excel::template(&actor)
     } else if input.path.starts_with("tool/gen") {
         generator::handle(&app, &actor, &input).await
     } else if let Some(v) = extra::handle(&app, &actor, &input).await? {

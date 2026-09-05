@@ -1,3 +1,35 @@
+# v0.2.0 验证记录（2026-09-05）
+
+本次使用 Rust 1.98.1、Node.js 22.22.3、独立 MySQL 5.7.43 和 Redis 8.2.3。测试服务与协议模拟器仅监听回环地址，没有接触生产数据库、真实商户或外部收件人。
+
+| 验证 | 结果 |
+| --- | --- |
+| cargo fmt --check / cargo check | 通过 |
+| cargo clippy --locked --all-targets -- -D warnings | 通过 |
+| cargo test --locked | 14 项通过 |
+| tests/integrations_test.py | 最终 musl 0.2.0 二进制上 17 组通过，13.885 秒 |
+| v0.1.0 → v0.2.0 迁移 | 独立旧版库执行增量迁移通过；全部原用户行摘要一致，新增 10 个菜单 |
+| npm ci / npm run build:prod | Node 22 隔离安装与最终构建通过 |
+| npm audit --omit=dev（npmjs 官方源） | 0 项报告 |
+| 完整 npm audit | 7 high / 2 moderate，仍为已有开发工具链问题 |
+| OSV / Cargo.lock | 检查 341 项依赖；剩余 rsa 0.9.10 / RUSTSEC-2023-0071 上游问题 |
+| Linux 二进制 | x86_64 musl 静态 PIE，无 INTERP；远端与本机 SHA-256 一致，本机运行版本检查通过 |
+| 浏览器 | 1440×1000 与 390×844，任务新增/执行/日志、订单列表与下单确认、缓存、Excel 模板下载通过；未观察到页面错误或失败 API |
+
+新增集成测试覆盖 V1 MD5 和 V2 RSA 请求及通知、网关返回验签、金额不符拒绝、重复下单/回调、查询到账、SMTP 认证与真实协议投递、STARTTLS 拒绝降级、Redis INFO/TTL/前缀清理、定时执行/暂停/手动执行与日志、日志和导出筛选、XLSX 模板/新增/更新/整批回滚、超级管理员保护及拥有导入权限的普通用户数据范围。原有十组鉴权、系统 CRUD、导出、配置、生成器等回归也包含在上述 17 组中。
+
+依赖审计促使 Excel 读取升级为 calamine 0.36.1、quick-xml 0.41.0，消除了初选旧 XML 版本的 RUSTSEC-2026-0194 / 0195。RSA 公告仍保留并在 SECURITY.md 说明；不能称为依赖零风险。SMTP 生产证书链/外部送达、真实支付供应商差异、MySQL 8.0 和大规模集群压力未在本次验证。
+
+后端二进制 SHA-256：
+
+```text
+d4fe7229d6d83756809ddbc8656fedf3a93bdfd85f37cdf37cd4554e0e65ecdc
+```
+
+前端截图与复核见根目录 design-qa.md。CI 模板仍未启用；以上为实际手工执行记录，不是 GitHub Actions 结果。
+
+---
+
 # v0.1.0 验证记录
 
 日期：2026-09-05。隔离构建环境使用 Rust 1.98.1、Node.js 22.22.3；真实数据库为独立 MySQL 5.7.43 实例。MySQL 8.0 为兼容目标，本次未单独运行 8.0 实例。

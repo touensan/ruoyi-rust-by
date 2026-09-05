@@ -4,7 +4,7 @@
 
 [源码](https://github.com/touensan/ruoyi-rust-by) · [发布版本](https://github.com/touensan/ruoyi-rust-by/releases) · [功能范围](docs/FEATURES.md) · [部署](docs/DEPLOYMENT.md) · [开发与验证](docs/DEVELOPMENT.md)
 
-**v0.1.0 为预发布版本。** 已实现系统管理核心流程；不是所有 RuoYi-Go BY / Qiluo 功能的完整移植。支付网关、SMTP 发送、定时任务、Redis 缓存监控和 Excel 导入尚未实现。
+**v0.2.0 为预发布版本。** 已补齐易支付 V1/V2、SMTP 发送、UTC 定时任务、Redis 缓存监控和 XLSX 用户导入。不是所有 RuoYi-Go BY / Qiluo 功能的完整移植；配置、升级和边界见 [集成说明](docs/INTEGRATIONS.md)。
 
 ![RuoYi-Rust BY 用户管理](docs/screenshots/users-desktop.png)
 
@@ -16,7 +16,8 @@
 - 用户、角色、菜单、部门、岗位、字典、参数、通知公告管理。
 - 角色菜单与用户角色关联；全部、自定义部门、本部门、本部门及下级、本人五种用户数据范围。
 - 登录日志、操作日志、在线会话与强制退出；基础服务器信息。
-- 站点配置、支付/邮箱配置保存；敏感字段使用 AES-256-GCM 加密并在接口中脱敏。
+- 站点配置、易支付下单/查单/验签通知与订单记录、SMTP 实际发送；密钥 AES-GCM 加密及掩码输出。
+- 内置 UTC 定时任务和日志、限定应用前缀的 Redis 监控/清理、事务化 XLSX 用户导入。
 - 图片上传与头像，格式重新编码；有权限和数据范围约束的 CSV 导出。
 - 数据表元数据导入、Rust 数据模型与分页查询模板预览、ZIP 下载。
 

@@ -112,8 +112,8 @@ const stackGroups = [
 
 const changelog = [{
   version: 'v0.1.0', date: '2026-09-05', title: 'Rust 首个预发布版本', status: '当前版本', current: true,
-  summary: '保留原生若依界面，后端使用 Rust、Axum 和 MySQL。首版功能范围与部署步骤请参阅仓库说明。',
-  items: ['接入用户、角色、菜单、部门、字典和参数管理。', '增加可撤销会话、用户数据范围和配置密钥加密。', '提供 Rust 数据模型和分页查询模板预览、下载；支付与邮件网关暂未接入。']
+  summary: '保留原生若依界面，后端使用 Rust、Axum 和 MySQL。功能范围与部署步骤请参阅仓库说明。',
+  items: ['接入用户、角色、菜单、部门、字典和参数管理。', '增加可撤销会话、用户数据范围和配置密钥加密。', '提供 Rust 模板、易支付、SMTP、定时任务、Redis 监控与 Excel 用户导入。']
 }]
 </script>
 

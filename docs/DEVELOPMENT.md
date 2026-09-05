@@ -16,7 +16,7 @@ Axum 路由先区分公开入口（验证码、登录、退出、站点公开配
 
 APP_KEY 是 32 字节随机密钥的 hex 表示。配置密钥使用随机 nonce 的 AES-256-GCM，关联数据绑定到配置组及字段名，防止密文跨字段替换。读取配置返回 `********`，保存相同掩码表示保留已有值。`frontendHeadCode` 被清空，站点配置不能注入脚本。
 
-上传只解码支持的光栅图片格式并重新编码为 PNG，文件名随机生成；不直接把用户原始文件发布到静态目录。上传、日志、令牌过期清理的容量规划仍由部署方负责。
+上传只解码支持的光栅图片格式并重新编码为 PNG，文件名随机生成；不直接把用户原始文件发布到静态目录。上传与日志容量规划由部署方负责；过期会话可由 session.cleanup 内置定时任务清理。
 
 ## 代码生成
 
@@ -49,3 +49,7 @@ python3 tests/api_test.py
 CI 模板位于 `docs/ci/github-actions.yml`。本次 GitHub 凭证不具有 workflow scope，因此模板未放入活动 workflows 目录；需要仓库维护者使用具备权限的凭证启用。
 
 实际验证结果记录在 `docs/VALIDATION.md`，不以本文件中的计划命令代替成功证据。
+
+## v0.2.0 集成模块
+
+新增模块和增量迁移见 [INTEGRATIONS.md](INTEGRATIONS.md)。`tests/integrations_test.py` 在原十组 API 回归上增加支付 V1/V2、SMTP、Redis、调度和 XLSX 事务/数据范围用例；仅在显式测试模式的隔离 MySQL/Redis 上运行，网关与 SMTP 为进程内回环协议接收器。

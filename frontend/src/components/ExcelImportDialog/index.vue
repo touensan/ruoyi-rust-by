@@ -1,6 +1,6 @@
 <template>
-  <el-dialog :title="title" v-model="visible" :width="width" append-to-body @close="handleClose">
-    <el-upload ref="uploadRef" :limit="1" accept=".xlsx, .xls" :headers="headers" :action="uploadUrl" :disabled="isUploading" :on-progress="handleProgress" :on-change="handleFileChange" :on-remove="handleFileRemove" :on-success="handleSuccess" :auto-upload="false" drag>
+  <el-dialog :title="title" v-model="visible" :width="'min(' + width + ', 94vw)'" append-to-body @close="handleClose">
+    <el-upload ref="uploadRef" :limit="1" accept=".xlsx" :headers="headers" :action="uploadUrl" :disabled="isUploading" :on-progress="handleProgress" :on-change="handleFileChange" :on-remove="handleFileRemove" :on-success="handleSuccess" :on-error="handleError" :auto-upload="false" drag>
       <el-icon class="el-icon--upload"><upload-filled /></el-icon>
       <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
       <template #tip>
@@ -8,14 +8,14 @@
           <div class="el-upload__tip">
             <el-checkbox v-model="updateSupport"> {{ updateSupportLabel }} </el-checkbox>
           </div>
-          <span>仅允许导入xls、xlsx格式文件。</span>
+          <span>仅支持 xlsx，最多 500 行、5 MB。新账号需填写至少 12 字符的初始密码；更新不修改密码与角色。</span>
           <el-link v-if="templateUrl" type="primary" underline="never" style="font-size: 12px; vertical-align: baseline" @click="handleDownloadTemplate">下载模板</el-link>
         </div>
       </template>
     </el-upload>
     <template #footer>
       <div class="dialog-footer">
-        <el-button type="primary" @click="handleSubmit">确 定</el-button>
+        <el-button type="primary" :loading="isUploading" @click="handleSubmit">确 定</el-button>
         <el-button @click="visible = false">取 消</el-button>
       </div>
     </template>
@@ -68,7 +68,7 @@ const visible = ref<boolean>(false)
 const selectedFile = ref<any>(null)
 const isUploading = ref<boolean>(false)
 const updateSupport = ref<boolean>(false)
-const headers = { Authorization: 'Bearer ' + getToken() }
+const headers = computed(() => ({ Authorization: 'Bearer ' + getToken() }))
 
 const uploadUrl = computed(() => {
   return import.meta.env.VITE_APP_BASE_API + props.action + '?updateSupport=' + (updateSupport.value ? 1 : 0)
@@ -116,21 +116,30 @@ const handleFileRemove = (file: any) => {
 
 // 上传成功
 function handleSuccess(response: AjaxResult) {
-  visible.value = false
   isUploading.value = false
+  if (response.code !== 200) { proxy.$modal.msgError(response.msg || '导入失败'); return }
+  visible.value = false
   selectedFile.value = null
   uploadRef.value?.clearFiles()
-  proxy.$alert("<div style='overflow:auto;overflow-x:hidden;max-height:70vh;padding:10px 20px 0;'>" + response.msg + '</div>', '导入结果', { dangerouslyUseHTMLString: true })
+  proxy.$alert(response.msg, '导入结果')
   emit('success')
+}
+function handleError(error: Error) {
+  isUploading.value = false
+  let message = '导入失败，请检查工作簿后重试'
+  try { message = JSON.parse(error.message).msg || message } catch {}
+  proxy.$modal.msgError(message)
 }
 
 // 提交上传
 function handleSubmit() {
   const file = selectedFile.value
-  if (!file || file.length === 0 || !file.name.toLowerCase().endsWith('.xls') && !file.name.toLowerCase().endsWith('.xlsx')) {
-    proxy.$modal.msgError("请选择后缀为 “xls”或“xlsx”的文件。")
+  if (!file || file.length === 0 || !file.name.toLowerCase().endsWith('.xlsx')) {
+    proxy.$modal.msgError("请选择 xlsx 文件。")
     return
   }
+  if (file.size > 5 * 1024 * 1024) { proxy.$modal.msgError("文件不能超过 5 MB"); return }
+  isUploading.value = true
   uploadRef.value.submit()
 }
 

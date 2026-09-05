@@ -176,8 +176,7 @@ function getList() {
   listJobLog(proxy.addDateRange(queryParams.value, dateRange.value)).then(response => {
     jobLogList.value = response.rows
     total.value = response.total
-    loading.value = false
-  })
+  }).finally(() => { loading.value = false })
 }
 
 // 返回按钮
@@ -241,6 +240,7 @@ function handleExport() {
 (() => {
   const jobId = route.params && Number(route.params.jobId)
   if (jobId !== undefined && jobId != 0) {
+    queryParams.value.jobId = jobId
     getJob(jobId).then(response => {
       queryParams.value.jobName = response.data!.jobName
       queryParams.value.jobGroup = response.data!.jobGroup

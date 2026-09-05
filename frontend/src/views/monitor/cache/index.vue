@@ -4,8 +4,8 @@
       <el-col :span="24" class="card-box">
         <el-card>
           <template #header><Monitor style="width: 1em; height: 1em; vertical-align: middle;" /> <span style="vertical-align: middle;">基本信息</span></template>
-          <div class="el-table el-table--enable-row-hover el-table--medium">
-            <table cellspacing="0" style="width: 100%">
+          <div class="el-table el-table--enable-row-hover el-table--medium" style="overflow-x: auto">
+            <table cellspacing="0" style="width: 100%; min-width: 720px">
               <tbody>
                 <tr>
                   <td class="el-table__cell is-leaf"><div class="cell">Redis版本</div></td>
@@ -22,8 +22,8 @@
                   <td class="el-table__cell is-leaf"><div class="cell" v-if="cache.info">{{ cache.info.uptime_in_days }}</div></td>
                   <td class="el-table__cell is-leaf"><div class="cell">使用内存</div></td>
                   <td class="el-table__cell is-leaf"><div class="cell" v-if="cache.info">{{ cache.info.used_memory_human }}</div></td>
-                  <td class="el-table__cell is-leaf"><div class="cell">使用CPU</div></td>
-                  <td class="el-table__cell is-leaf"><div class="cell" v-if="cache.info">{{ parseFloat(cache.info.used_cpu_user_children).toFixed(2) }}</div></td>
+                  <td class="el-table__cell is-leaf"><div class="cell">累计 CPU（秒）</div></td>
+                  <td class="el-table__cell is-leaf"><div class="cell" v-if="cache.info">{{ parseFloat(cache.info.used_cpu_user).toFixed(2) }}</div></td>
                   <td class="el-table__cell is-leaf"><div class="cell">内存配置</div></td>
                   <td class="el-table__cell is-leaf"><div class="cell" v-if="cache.info">{{ cache.info.maxmemory_human }}</div></td>
                 </tr>
@@ -33,7 +33,7 @@
                   <td class="el-table__cell is-leaf"><div class="cell">RDB是否成功</div></td>
                   <td class="el-table__cell is-leaf"><div class="cell" v-if="cache.info">{{ cache.info.rdb_last_bgsave_status }}</div></td>
                   <td class="el-table__cell is-leaf"><div class="cell">Key数量</div></td>
-                  <td class="el-table__cell is-leaf"><div class="cell" v-if="cache.dbSize">{{ cache.dbSize }} </div></td>
+                  <td class="el-table__cell is-leaf"><div class="cell" v-if="cache.info">{{ cache.dbSize }} </div></td>
                   <td class="el-table__cell is-leaf"><div class="cell">网络入口/出口</div></td>
                   <td class="el-table__cell is-leaf"><div class="cell" v-if="cache.info">{{ cache.info.instantaneous_input_kbps }}kps/{{cache.info.instantaneous_output_kbps}}kps</div></td>
                 </tr>
@@ -43,7 +43,7 @@
         </el-card>
       </el-col>
 
-      <el-col :span="12" class="card-box">
+      <el-col :xs="24" :md="12" class="card-box">
         <el-card>
           <template #header><PieChart style="width: 1em; height: 1em; vertical-align: middle;" /> <span style="vertical-align: middle;">命令统计</span></template>
           <div class="el-table el-table--enable-row-hover el-table--medium">
@@ -52,7 +52,7 @@
         </el-card>
       </el-col>
 
-      <el-col :span="12" class="card-box">
+      <el-col :xs="24" :md="12" class="card-box">
         <el-card>
           <template #header><Odometer style="width: 1em; height: 1em; vertical-align: middle;" /> <span style="vertical-align: middle;">内存信息</span></template>
           <div class="el-table el-table--enable-row-hover el-table--medium">
@@ -80,7 +80,9 @@ function getList(): void {
     cache.value = response.data!
 
     const commandstatsIntance = echarts.init(commandstats.value!, "macarons")
+    const compact = window.innerWidth < 768
     commandstatsIntance.setOption({
+      legend: { show: compact, type: "scroll", bottom: 12, left: 12, right: 12 },
       tooltip: {
         trigger: "item",
         formatter: "{a} <br/>{b} : {c} ({d}%)"
@@ -88,6 +90,8 @@ function getList(): void {
       series: [
         {
           name: "命令",
+          label: { show: !compact },
+          labelLine: { show: !compact },
           type: "pie",
           roseType: "radius",
           radius: [15, 95],
@@ -105,16 +109,16 @@ function getList(): void {
       },
       series: [
         {
-          name: "峰值",
+          name: "内存（MiB）",
           type: "gauge",
           min: 0,
-          max: 1000,
+          max: Math.max(1, Math.ceil(Number(cache.value!.info.used_memory) / 1048576) * 2),
           detail: {
             formatter: cache.value!.info.used_memory_human
           },
           data: [
             {
-              value: parseFloat(cache.value!.info.used_memory_human),
+              value: Number(cache.value!.info.used_memory) / 1048576,
               name: "内存消耗"
             }
           ]
@@ -125,7 +129,7 @@ function getList(): void {
       commandstatsIntance.resize()
       usedmemoryInstance.resize()
     })
-  })
+  }).finally(() => proxy.$modal.closeLoading())
 }
 
 getList()

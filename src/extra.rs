@@ -144,16 +144,16 @@ async fn save_settings(app: &App, a: &Actor, i: &Input, group: &str) -> Result<V
             }
         }
     }
-    if (group == "payment" || group == "mail") && cfg["enabled"] == true {
-        return Err(AppError::bad(
-            "首版支持保存配置；支付网关和 SMTP 尚未实现，暂不能启用",
-        ));
+    if group == "mail" {
+        if cfg["encryption"] == "tls" {
+            cfg["encryption"] = json!("starttls");
+        }
+        if cfg["enabled"] == true {
+            crate::mail::validate(&cfg)?;
+        }
     }
-    if group == "mail"
-        && (!(1..=65535).contains(&db::num(&cfg["port"]))
-            || !["ssl", "tls", "none"].contains(&db::scalar(&cfg["encryption"]).as_str()))
-    {
-        return Err(AppError::bad("邮件端口或加密方式无效"));
+    if group == "payment" && cfg["enabled"] == true {
+        crate::payment::validate(&cfg)?;
     }
     for key in SECRETS {
         let s = db::scalar(&cfg[key]);
@@ -378,9 +378,8 @@ pub async fn handle(app: &App, a: &Actor, i: &Input) -> Result<Option<Response>>
         ("PUT", p) if p.starts_with("system/setting/") => {
             save_settings(app, a, i, p.strip_prefix("system/setting/").unwrap()).await?
         }
-        ("POST", "system/setting/payment/test" | "system/setting/mail/test") => {
-            return Err(AppError::bad("此版本暂未实现支付网关和 SMTP 联通测试"));
-        }
+        ("POST", "system/setting/payment/test") => crate::payment::test(app, a, i).await?,
+        ("POST", "system/setting/mail/test") => crate::mail::test(app, a, i).await?,
         ("GET", "monitor/online/list") => {
             a.require("monitor:online:list")?;
             let rows=db::rows(&app.pool,"SELECT t.id AS token_id,u.user_name,d.dept_name,t.ip AS ipaddr,t.browser,t.created_at AS login_time FROM sys_access_token t JOIN sys_user u ON u.user_id=t.user_id LEFT JOIN sys_dept d ON u.dept_id=d.dept_id WHERE t.expires_at>NOW() AND u.status='0' AND u.delete_time IS NULL ORDER BY t.id DESC LIMIT 100",&[]).await?;

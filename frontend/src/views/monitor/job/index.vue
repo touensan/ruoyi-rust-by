@@ -139,15 +139,15 @@
       />
 
       <!-- 添加或修改定时任务对话框 -->
-      <el-dialog :title="title" v-model="open" width="820px" append-to-body>
+      <el-dialog :title="title" v-model="open" width="min(820px, 94vw)" append-to-body>
          <el-form ref="jobRef" :model="form" :rules="rules" label-width="120px">
             <el-row>
-               <el-col :span="12">
+               <el-col :xs="24" :sm="12">
                   <el-form-item label="任务名称" prop="jobName">
                      <el-input v-model="form.jobName" placeholder="请输入任务名称" />
                   </el-form-item>
                </el-col>
-               <el-col :span="12">
+               <el-col :xs="24" :sm="12">
                   <el-form-item label="任务分组" prop="jobGroup">
                      <el-select v-model="form.jobGroup" placeholder="请选择">
                         <el-option
@@ -167,21 +167,25 @@
                            <el-tooltip placement="top">
                               <template #content>
                                  <div>
-                                    Bean调用示例：ryTask.ryParams('ry')
-                                    <br />Class类调用示例：com.ruoyi.quartz.task.RyTask.ryParams('ry')
-                                    <br />参数说明：支持字符串，布尔类型，长整型，浮点型，整型
+                                    仅允许内置任务：服务心跳、过期会话清理、Redis 检查
+
+                                    <br />任务按 UTC 调度，重启后按执行策略处理错过的计划。
                                  </div>
                               </template>
                               <el-icon><question-filled /></el-icon>
                            </el-tooltip>
                         </span>
                      </template>
-                     <el-input v-model="form.invokeTarget" placeholder="请输入调用目标字符串" />
+                     <el-select v-model="form.invokeTarget" style="width: 100%">
+                       <el-option label="服务心跳" value="system.heartbeat" />
+                       <el-option label="清理过期会话" value="session.cleanup" />
+                       <el-option label="Redis 连接检查" value="cache.ping" />
+                     </el-select>
                   </el-form-item>
                </el-col>
                <el-col :span="24">
-                  <el-form-item label="cron表达式" prop="cronExpression">
-                     <el-input v-model="form.cronExpression" placeholder="请输入cron执行表达式">
+                  <el-form-item label="Cron（UTC）" prop="cronExpression">
+                     <el-input v-model="form.cronExpression" placeholder="秒 分 时 日 月 周 [年]；不支持 L/W/#">
                         <template #append>
                            <el-button type="primary" @click="handleShowCron">
                               生成表达式
@@ -202,19 +206,19 @@
                      </el-radio-group>
                   </el-form-item>
                </el-col>
-               <el-col :span="12">
+               <el-col :xs="24" :sm="12">
                   <el-form-item label="执行策略" prop="misfirePolicy">
                      <el-radio-group v-model="form.misfirePolicy">
-                        <el-radio-button value="1">立即执行</el-radio-button>
+
                         <el-radio-button value="2">执行一次</el-radio-button>
                         <el-radio-button value="3">放弃执行</el-radio-button>
                      </el-radio-group>
                   </el-form-item>
                </el-col>
-               <el-col :span="12">
+               <el-col :xs="24" :sm="12">
                   <el-form-item label="是否并发" prop="concurrent">
                      <el-radio-group v-model="form.concurrent">
-                        <el-radio-button value="0">允许</el-radio-button>
+
                         <el-radio-button value="1">禁止</el-radio-button>
                      </el-radio-group>
                   </el-form-item>
@@ -285,8 +289,7 @@ function getList() {
   listJob(queryParams.value).then(response => {
     jobList.value = response.rows
     total.value = response.total
-    loading.value = false
-  })
+  }).finally(() => { loading.value = false })
 }
 
 /** 取消按钮 */
@@ -300,12 +303,12 @@ function reset() {
   form.value = {
     jobId: undefined,
     jobName: undefined,
-    jobGroup: undefined,
-    invokeTarget: undefined,
-    cronExpression: undefined,
-    misfirePolicy: '1',
+    jobGroup: 'DEFAULT',
+    invokeTarget: 'system.heartbeat',
+    cronExpression: '0 */5 * * * ?',
+    misfirePolicy: '3',
     concurrent: '1',
-    status: "0"
+    status: "1"
   }
   proxy.resetForm("jobRef")
 }
