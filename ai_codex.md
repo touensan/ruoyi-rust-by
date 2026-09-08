@@ -62,3 +62,10 @@ v0.2.0 已补齐五项集成。后续仅按用户新要求继续；完整 CRUD �
 ## 2026-09-05｜版本与功能说明纠正
 
 当前源码与旧 Release/附件分开记录在 `docs/VERSIONS.md`。历史发布说明仅适用于其标签；未真实供应商联调不等于未实现。以后每次改变功能必须同步版本状态与文档，旧标签和下载附件不得被文案修改冒充为新版本。
+
+## 2026-09-08｜v0.2.0 Release 运行包
+
+- 用户明确要求发布最新源码对应的 GitHub Release 下载包；版本为 v0.2.0，发布入口 https://github.com/touensan/ruoyi-rust-by/releases/tag/v0.2.0 。发布结果、源码提交与压缩包校验和以该 Release 为准。
+- 后端复用 203fd296a0768acc36e65b24b2f2900a07982bf6 对应的已验证 musl 产物，SHA-256 为 3f02a77b255c1c1a59a1d342dde13410fc396e3340f41eb2993342ba513ffa58；之后的变动仅为文档与打包脚本，运行代码、迁移、锁文件未变。其 14 项单元、18 组 MySQL/Redis/API 和浏览器验证记录见 docs/VALIDATION.md。
+- 前端按锁文件从发布源码构建；包内 BUILD_INFO.json 记录准确来源，外部 SHA256SUMS 校验完整运行包。脚本自动读取 Cargo 版本、纳入前端 MIT 许可与 SECURITY.md，不包含真实环境配置、数据或记忆文件。
+- README、FEATURES、VERSIONS 的“只有历史 v0.1.0 包”状态由本次 v0.2.0 发布替代；旧标签与旧附件不移动、不替换。本次不部署业务站。

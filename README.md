@@ -2,15 +2,15 @@
 
 保留 **RuoYi-Go BY 的 Vue 3 / TypeScript 管理界面**，后端改用 **Rust + Axum + MySQL** 的开源后台管理框架。
 
-[源码](https://github.com/touensan/ruoyi-rust-by) · [历史下载包](https://github.com/touensan/ruoyi-rust-by/releases) · [功能范围](docs/FEATURES.md) · [部署](docs/DEPLOYMENT.md) · [开发与验证](docs/DEVELOPMENT.md)
+[源码](https://github.com/touensan/ruoyi-rust-by) · [v0.2.0 下载包](https://github.com/touensan/ruoyi-rust-by/releases/tag/v0.2.0) · [功能范围](docs/FEATURES.md) · [部署](docs/DEPLOYMENT.md) · [开发与验证](docs/DEVELOPMENT.md)
 
-**当前 main 为 v0.2.0 源码，尚未发布对应 Release 下载包。** 已补齐易支付 V1/V2、SMTP 发送、UTC 定时任务、Redis 缓存监控和 XLSX 用户导入。不是所有 RuoYi-Go BY / Qiluo 功能的完整移植；配置、升级和边界见 [集成说明](docs/INTEGRATIONS.md)。
+**v0.2.0 提供对应的 Linux x86_64 Release 运行包（后端与前端已打包）。** 已补齐易支付 V1/V2、SMTP 发送、UTC 定时任务、Redis 缓存监控和 XLSX 用户导入。不是所有 RuoYi-Go BY / Qiluo 功能的完整移植；配置、升级和边界见 [集成说明](docs/INTEGRATIONS.md)。
 
 ![RuoYi-Rust BY 用户管理](docs/screenshots/users-desktop.png)
 
 ## 当前源码与下载版本
 
-当前 `main` 的源码版本为 **v0.2.0**，已实现支付、SMTP、定时任务、Redis 监控、XLSX 用户导入和统一后台 RBAC。**GitHub 现有 Release 与运行下载包仍为历史 v0.1.0，尚未发布 v0.2.0 下载包。** 完整对应关系见 [版本与下载状态](docs/VERSIONS.md)。
+当前 `main` 的源码版本为 **v0.2.0**，已实现支付、SMTP、定时任务、Redis 监控、XLSX 用户导入和统一后台 RBAC。[v0.2.0 Release](https://github.com/touensan/ruoyi-rust-by/releases/tag/v0.2.0) 包含上述功能与统一后台 RBAC；历史 v0.1.0 包不包含这些更新。 完整对应关系见 [版本与下载状态](docs/VERSIONS.md)。
 
 ## 统一后台
 
@@ -31,7 +31,11 @@
 
 详细限制和实现边界见 [FEATURES.md](docs/FEATURES.md)。
 
-## 快速开始
+## 下载运行包
+
+在 [v0.2.0 发布页](https://github.com/touensan/ruoyi-rust-by/releases/tag/v0.2.0) 下载 `ruoyi-rust-by-v0.2.0-linux-x86_64.tar.gz` 和 `SHA256SUMS`，放在同一目录后执行 `sha256sum -c SHA256SUMS`。解压到独立目录，按 [部署说明](docs/DEPLOYMENT.md) 配置数据库和密钥；已有 v0.1.0 部署先备份，再执行 `./ruoyi-rust-by migrate`。包内 `BUILD_INFO.json` 记录源码提交、工具链和后端摘要。
+
+## 从源码开始
 
 需要 Rust **1.98.1**、MySQL 5.7/8.0；修改前端还需要 Node.js 22。Rust 后端编译为二进制，Vue 前端打包为静态文件；运行时不需要 PHP、Go 或 Node.js。
 
