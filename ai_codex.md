@@ -73,3 +73,7 @@ v0.2.0 已补齐五项集成。后续仅按用户新要求继续；完整 CRUD �
 ## 2026-09-24｜单机平滑更新源码
 
 用户要求参考 MOX 项目的蓝绿切流方式改造 Go/Rust 仓库，PHP 仓库仅拉取核对。Rust main 已加入回环私有就绪检查、SIGTERM 优雅退出、候选端口覆盖、调度任务退出等待与 `deploy/smooth-release.py`。边界及操作见 `docs/SMOOTH_RELEASE.md`；验证码/限速仍是单实例内存，跨切流登录可失效一次。旧 v0.2.0 附件未改，未部署业务站点；验证状态见 `docs/DEVELOPMENT.md`。
+
+## 2026-09-24｜v0.2.1 Release
+
+用户要求将当前主干制作新包并发布。版本定为 v0.2.1，内容是 v0.2.0 功能加单机平滑更新工具；发布只针对 GitHub，不代表业务站升级。源码、标签、运行包和校验以 GitHub Release 及 `docs/DEVELOPMENT.md` 为准。
