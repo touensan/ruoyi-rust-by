@@ -69,3 +69,7 @@ v0.2.0 已补齐五项集成。后续仅按用户新要求继续；完整 CRUD �
 - 后端复用 203fd296a0768acc36e65b24b2f2900a07982bf6 对应的已验证 musl 产物，SHA-256 为 3f02a77b255c1c1a59a1d342dde13410fc396e3340f41eb2993342ba513ffa58；之后的变动仅为文档与打包脚本，运行代码、迁移、锁文件未变。其 14 项单元、18 组 MySQL/Redis/API 和浏览器验证记录见 docs/VALIDATION.md。
 - 前端按锁文件从发布源码构建；包内 BUILD_INFO.json 记录准确来源，外部 SHA256SUMS 校验完整运行包。脚本自动读取 Cargo 版本、纳入前端 MIT 许可与 SECURITY.md，不包含真实环境配置、数据或记忆文件。
 - README、FEATURES、VERSIONS 的“只有历史 v0.1.0 包”状态由本次 v0.2.0 发布替代；旧标签与旧附件不移动、不替换。本次不部署业务站。
+
+## 2026-09-24｜单机平滑更新源码
+
+用户要求参考 MOX 项目的蓝绿切流方式改造 Go/Rust 仓库，PHP 仓库仅拉取核对。Rust main 已加入回环私有就绪检查、SIGTERM 优雅退出、候选端口覆盖、调度任务退出等待与 `deploy/smooth-release.py`。边界及操作见 `docs/SMOOTH_RELEASE.md`；验证码/限速仍是单实例内存，跨切流登录可失效一次。旧 v0.2.0 附件未改，未部署业务站点；验证状态见 `docs/DEVELOPMENT.md`。

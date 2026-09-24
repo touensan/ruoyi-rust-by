@@ -100,18 +100,24 @@ async fn execute(app: &App, id: Value, manual: bool) -> Result<()> {
     tx.commit().await?;
     result.map(|_| ())
 }
-pub fn start(app: App) {
+pub fn start(
+    app: App,
+    mut stop: tokio::sync::oneshot::Receiver<()>,
+) -> Option<tokio::task::JoinHandle<()>> {
     if crate::env("SCHEDULER_ENABLED", "true") == "false" {
-        return;
+        return None;
     }
-    tokio::spawn(async move {
+    Some(tokio::spawn(async move {
         let mut tick = tokio::time::interval(Duration::from_secs(1));
         tick.set_missed_tick_behavior(tokio::time::MissedTickBehavior::Skip);
         loop {
-            tick.tick().await;
+            tokio::select! {
+                _ = &mut stop => break,
+                _ = tick.tick() => {}
+            }
             match db::rows(&app.pool,"SELECT job_id FROM sys_job WHERE status='0' AND next_run_time<=NOW() ORDER BY next_run_time LIMIT 20",&[]).await{Ok(rows)=>for row in rows{if let Err(e)=execute(&app,row["jobId"].clone(),false).await{tracing::warn!(message=%e.1,"scheduled job failed");}},Err(_)=>tracing::warn!("scheduler could not read jobs; run database migrations before serve")}
         }
-    });
+    }))
 }
 fn filters(i: &Input, logs: bool) -> Result<(String, Vec<Value>)> {
     let mut cond = "1=1".to_owned();

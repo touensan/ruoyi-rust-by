@@ -1,0 +1,23 @@
+{
+  "state_dir": "/opt/ruoyi-rust-by/deployment",
+  "releases_dir": "/opt/ruoyi-rust-by/releases",
+  "assets_dir": "/opt/ruoyi-rust-by/shared/assets",
+  "shared_uploads": "/opt/ruoyi-rust-by/shared/uploads",
+  "env_file": "/opt/ruoyi-rust-by/private/service.env",
+  "systemd_dir": "/etc/systemd/system",
+  "service_prefix": "ruoyi-rust-by",
+  "user": "ruoyi",
+  "group": "ruoyi",
+  "binary": "ruoyi-rust-by",
+  "serve_arg": "serve",
+  "web_assets": "public/admin/assets",
+  "upload_path": "uploads",
+  "ports": [8000, 8001, 8002],
+  "nginx_include": "/etc/nginx/snippets/ruoyi-rust-by-release.conf",
+  "nginx_bin": "/usr/sbin/nginx",
+  "nginx_config": "/etc/nginx/nginx.conf",
+  "nginx_pid": "/run/nginx.pid",
+  "host": "admin.example.com",
+  "probe_origin": "http://127.0.0.1",
+  "smoke_paths": ["/admin/", "/api/health"]
+}

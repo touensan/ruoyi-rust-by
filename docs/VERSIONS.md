@@ -4,6 +4,8 @@
 
 **v0.2.0 提供 Linux x86_64 musl 运行包**，包含后端二进制、Vue 前端、部署模板和文档，实现支付、SMTP、定时任务、Redis 监控、XLSX 用户导入和统一后台 RBAC。
 
+当前 `main` 新增[单机平滑更新流程](SMOOTH_RELEASE.md)；旧 v0.2.0 标签与下载附件保持原样，不包含该流程。
+
 | 来源 | 实际含义 |
 | --- | --- |
 | [v0.2.0 标签及运行包](https://github.com/touensan/ruoyi-rust-by/releases/tag/v0.2.0) | 五项集成和统一后台 RBAC；源码提交及后端摘要见包内 BUILD_INFO.json，压缩包摘要见 SHA256SUMS |

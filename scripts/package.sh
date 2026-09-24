@@ -23,6 +23,7 @@ if [ -n "$build_info_path" ]; then
     cp "$build_info_path" "$package_dir/BUILD_INFO.json"
 fi
 cp -a "$project_dir/deploy" "$project_dir/docs" "$package_dir/"
+(cd "$package_dir" && find . -type f -print0 | sort -z | xargs -0 sha256sum > FILE_SHA256SUMS)
 tar -C "$package_dir" -czf "$output_dir/$archive_name" .
 (cd "$output_dir" && sha256sum "$archive_name" > SHA256SUMS)
 printf 'Package: %s\n' "$output_dir/$archive_name"

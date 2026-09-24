@@ -179,7 +179,8 @@ async fn run() -> Result<()> {
     tokio::fs::create_dir_all("uploads")
         .await
         .map_err(|_| AppError::bad("不能创建 uploads 目录"))?;
-    jobs::start(app.clone());
+    let (scheduler_stop, scheduler_stopped) = tokio::sync::oneshot::channel();
+    let scheduler = jobs::start(app.clone(), scheduler_stopped);
     let api = Router::new()
         .route("/common/upload", post(extra::upload))
         .route("/system/user/importData", post(excel::import))
@@ -193,6 +194,7 @@ async fn run() -> Result<()> {
         ));
     let router = Router::new()
         .nest("/api", api)
+        .route("/internal/ready", get(ready))
         .route("/", get(|| async { Redirect::temporary("/admin/") }))
         .nest_service(
             "/admin",
@@ -201,13 +203,16 @@ async fn run() -> Result<()> {
                 .fallback(ServeFile::new("public/admin/index.html")),
         )
         .nest_service("/uploads", ServeDir::new("uploads"))
+        .with_state(app.clone())
         .layer(SetResponseHeaderLayer::overriding(
             header::X_CONTENT_TYPE_OPTIONS,
             header::HeaderValue::from_static("nosniff"),
         ));
-    let address: SocketAddr = env("BIND_ADDR", "127.0.0.1:8000")
-        .parse()
-        .map_err(|_| AppError::bad("BIND_ADDR 无效"))?;
+    let bind = match std::env::var("RUOYI_PORT") {
+        Ok(port) => format!("127.0.0.1:{port}"),
+        Err(_) => env("BIND_ADDR", "127.0.0.1:8000"),
+    };
+    let address: SocketAddr = bind.parse().map_err(|_| AppError::bad("BIND_ADDR 无效"))?;
     let listener = tokio::net::TcpListener::bind(address)
         .await
         .map_err(|_| AppError::bad("无法绑定监听地址"))?;
@@ -217,11 +222,42 @@ async fn run() -> Result<()> {
         router.into_make_service_with_connect_info::<SocketAddr>(),
     )
     .with_graceful_shutdown(async {
-        let _ = tokio::signal::ctrl_c().await;
+        #[cfg(unix)]
+        {
+            let mut terminate =
+                tokio::signal::unix::signal(tokio::signal::unix::SignalKind::terminate())
+                    .expect("SIGTERM handler");
+            tokio::select! { _ = tokio::signal::ctrl_c() => {}, _ = terminate.recv() => {} }
+        }
+        #[cfg(not(unix))]
+        {
+            let _ = tokio::signal::ctrl_c().await;
+        }
     })
     .await
     .map_err(|_| AppError::bad("HTTP 服务退出"))?;
+    let _ = scheduler_stop.send(());
+    if let Some(scheduler) = scheduler {
+        scheduler
+            .await
+            .map_err(|_| AppError::bad("调度任务退出失败"))?;
+    }
     Ok(())
+}
+async fn ready(State(app): State<App>, ConnectInfo(peer): ConnectInfo<SocketAddr>) -> Response {
+    if !peer.ip().is_loopback() {
+        return StatusCode::NOT_FOUND.into_response();
+    }
+    let applied: std::result::Result<i64, _> =
+        sqlx::query_scalar("SELECT COUNT(*) FROM _sqlx_migrations WHERE success=1")
+            .fetch_one(&app.pool)
+            .await;
+    match applied {
+        Ok(count) if count == sqlx::migrate!().migrations.len() as i64 => {
+            Json(json!({"status":"ok","version":env!("CARGO_PKG_VERSION")})).into_response()
+        }
+        _ => StatusCode::SERVICE_UNAVAILABLE.into_response(),
+    }
 }
 async fn dispatch(
     State(app): State<App>,
